@@ -105,6 +105,7 @@ function aplicarTextosGuardados() {
     console.error("❌ Error al procesar textos guardados:", error);
   }
 }
+
 /**
  * Carga la configuración del catálogo
  */
@@ -928,3 +929,22 @@ function configurarNavegacion() {
   
   console.log("🧭 Navegación configurada");
 }
+
+// === FUNCIÓN PARA RECARGAR PRODUCTOS (usada por admin.js) ===
+
+/**
+ * Recarga productos desde localStorage (llamada desde admin.js)
+ */
+function recargarProductos() {
+  console.log("🔄 Recargando productos...");
+  const productos = obtenerProductosAlmacenados();
+  if (productos) {
+    productosGlobales = productos;
+    procesarProductos(productos, configGlobal);
+  }
+}
+
+// Hacer función global para que admin.js pueda usarla
+window.recargarProductos = recargarProductos;
+
+console.log('✅ Catálogo Digital cargado - Gonzapereyraa - 2025-09-02 14:36:22');
