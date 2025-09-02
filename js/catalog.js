@@ -627,3 +627,304 @@ function mostrarErrorCarga() {
     </div>
   `;
 }
+
+// === FUNCIONES DEL CARRITO ===
+
+/**
+ * Inicializa el sistema de carrito
+ */
+function inicializarCarrito() {
+  console.log("🛒 Inicializando carrito");
+  
+  const elementos = {
+    carrito: obtenerCarritoStorage(),
+    cartBtn: document.getElementById('cartButton'),
+    cartModal: document.getElementById('cartModal'),
+    closeCart: document.getElementById('closeCart'),
+    clearCart: document.getElementById('clearCart'),
+    checkout: document.getElementById('checkout')
+  };
+  
+  if (!elementos.cartBtn || !elementos.cartModal) {
+    return; // Sin warning
+  }
+  
+  // Actualizar contador inicial
+  actualizarContadorCarrito(elementos.carrito);
+  
+  // Configurar eventos
+  elementos.cartBtn.addEventListener('click', () => abrirModalCarrito(elementos.carrito));
+  
+  if (elementos.closeCart) {
+    elementos.closeCart.addEventListener('click', cerrarModalCarrito);
+  }
+  
+  if (elementos.clearCart) {
+    elementos.clearCart.addEventListener('click', vaciarCarrito);
+  }
+  
+  if (elementos.checkout) {
+    elementos.checkout.addEventListener('click', procesarCheckout);
+  }
+  
+  console.log("✅ Carrito inicializado");
+}
+
+/**
+ * Obtiene carrito del localStorage de forma segura
+ */
+function obtenerCarritoStorage() {
+  try {
+    return JSON.parse(localStorage.getItem('carrito') || '[]');
+  } catch (error) {
+    console.error("❌ Error al obtener carrito:", error);
+    return [];
+  }
+}
+
+/**
+ * Guarda carrito en localStorage
+ */
+function guardarCarritoStorage(carrito) {
+  try {
+    localStorage.setItem('carrito', JSON.stringify(carrito));
+  } catch (error) {
+    console.error("❌ Error al guardar carrito:", error);
+  }
+}
+
+/**
+ * Agrega producto al carrito
+ */
+function agregarAlCarrito(producto) {
+  if (!producto) {
+    return; // Sin error, simplemente salir
+  }
+  
+  let carrito = obtenerCarritoStorage();
+  
+  // Buscar si el producto ya existe
+  const indiceExistente = carrito.findIndex(item => item.id === producto.id);
+  
+  if (indiceExistente >= 0) {
+    carrito[indiceExistente].cantidad += 1;
+  } else {
+    carrito.push({ ...producto, cantidad: 1 });
+  }
+  
+  // Guardar y actualizar UI
+  guardarCarritoStorage(carrito);
+  actualizarContadorCarrito(carrito);
+  mostrarNotificacionCarrito(`${producto.nombre} agregado al carrito`);
+}
+
+/**
+ * Actualiza contador del carrito
+ */
+function actualizarContadorCarrito(carrito) {
+  const cartCount = document.getElementById('cartCount');
+  if (!cartCount) return;
+  
+  const cantidad = carrito.reduce((total, item) => total + item.cantidad, 0);
+  
+  if (cantidad > 0) {
+    cartCount.textContent = cantidad;
+    cartCount.classList.remove('hidden');
+  } else {
+    cartCount.classList.add('hidden');
+  }
+}
+
+/**
+ * Abre modal del carrito
+ */
+function abrirModalCarrito(carrito) {
+  const modal = document.getElementById('cartModal');
+  if (modal) {
+    modal.classList.remove('hidden');
+    mostrarItemsCarrito(carrito);
+  }
+}
+
+/**
+ * Cierra modal del carrito
+ */
+function cerrarModalCarrito() {
+  const modal = document.getElementById('cartModal');
+  if (modal) {
+    modal.classList.add('hidden');
+  }
+}
+
+/**
+ * Muestra items en el modal del carrito
+ */
+function mostrarItemsCarrito(carrito) {
+  const cartItems = document.getElementById('cartItems');
+  const cartTotal = document.getElementById('cartTotal');
+  
+  if (!cartItems || !cartTotal) return;
+  
+  cartItems.innerHTML = '';
+  
+  if (carrito.length === 0) {
+    cartItems.innerHTML = `
+      <div class="text-center py-8">
+        <i class="fas fa-shopping-cart text-4xl text-gray-400 mb-4"></i>
+        <p class="text-gray-300">Tu carrito está vacío</p>
+        <p class="text-sm text-gray-400 mt-2">Agrega algunos productos para comenzar</p>
+      </div>
+    `;
+    cartTotal.textContent = '$0.00';
+    return;
+  }
+  
+  let total = 0;
+  
+  carrito.forEach(item => {
+    const subtotal = item.precio * item.cantidad;
+    total += subtotal;
+    
+    const itemDiv = document.createElement('div');
+    itemDiv.className = 'flex items-center justify-between bg-white bg-opacity-10 p-3 rounded mb-3';
+    itemDiv.innerHTML = `
+      <div class="flex items-center space-x-3">
+        <img src="${item.imagen}" alt="${item.nombre}" class="w-12 h-12 object-cover rounded" 
+             onerror="this.src='${generarImagenFallback(item.nombre)}'">
+        <div>
+          <h4 class="font-medium text-sm">${item.nombre}</h4>
+          <p class="text-xs text-gray-400">$${item.precio.toFixed(2)} x ${item.cantidad}</p>
+        </div>
+      </div>
+      <div class="flex items-center space-x-2">
+        <span class="font-bold text-sm">$${subtotal.toFixed(2)}</span>
+        <button class="remove-item p-1 hover:bg-red-500 hover:bg-opacity-20 rounded text-xs" data-id="${item.id}" title="Eliminar">
+          <i class="fas fa-trash text-red-500"></i>
+        </button>
+      </div>
+    `;
+    
+    cartItems.appendChild(itemDiv);
+  });
+  
+  cartTotal.textContent = `$${total.toFixed(2)}`;
+  
+  // Configurar botones de eliminar
+  cartItems.querySelectorAll('.remove-item').forEach(btn => {
+    btn.addEventListener('click', function() {
+      const id = parseInt(this.dataset.id);
+      eliminarDelCarrito(id);
+    });
+  });
+}
+
+/**
+ * Elimina item del carrito
+ */
+function eliminarDelCarrito(id) {
+  let carrito = obtenerCarritoStorage();
+  carrito = carrito.filter(item => item.id !== id);
+  
+  guardarCarritoStorage(carrito);
+  actualizarContadorCarrito(carrito);
+  mostrarItemsCarrito(carrito);
+}
+
+/**
+ * Vacía todo el carrito
+ */
+function vaciarCarrito() {
+  if (confirm('¿Estás seguro de que quieres vaciar el carrito?')) {
+    guardarCarritoStorage([]);
+    actualizarContadorCarrito([]);
+    mostrarItemsCarrito([]);
+    mostrarNotificacionCarrito('Carrito vaciado');
+  }
+}
+
+/**
+ * Procesa el checkout
+ */
+function procesarCheckout() {
+  const carrito = obtenerCarritoStorage();
+  
+  if (carrito.length === 0) {
+    mostrarNotificacionCarrito('Tu carrito está vacío', 'error');
+    return;
+  }
+  
+  const total = carrito.reduce((sum, item) => sum + (item.precio * item.cantidad), 0);
+  const cantidadItems = carrito.reduce((sum, item) => sum + item.cantidad, 0);
+  
+  const mensaje = `¡Gracias por tu compra!
+
+Total: $${total.toFixed(2)}
+Productos: ${cantidadItems} items
+Fecha: ${new Date().toLocaleDateString('es-ES')}
+
+En un sistema real, serías redirigido al proceso de pago.`;
+
+  alert(mensaje);
+  
+  // Limpiar carrito después de la compra
+  guardarCarritoStorage([]);
+  actualizarContadorCarrito([]);
+  cerrarModalCarrito();
+}
+
+/**
+ * Muestra notificación del carrito
+ */
+function mostrarNotificacionCarrito(mensaje, tipo = 'success') {
+  const notificacion = document.createElement('div');
+  notificacion.className = `fixed bottom-4 right-4 px-4 py-2 rounded-lg shadow-lg z-50 ${
+    tipo === 'success' ? 'bg-green-500' : 'bg-red-500'
+  } text-white transform translate-x-full transition-transform duration-300`;
+  
+  notificacion.innerHTML = `
+    <div class="flex items-center">
+      <i class="fas ${tipo === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} mr-2"></i>
+      <span class="text-sm">${mensaje}</span>
+    </div>
+  `;
+  
+  document.body.appendChild(notificacion);
+  
+  // Animación de entrada
+  setTimeout(() => notificacion.classList.remove('translate-x-full'), 100);
+  
+  // Remover después de 3 segundos
+  setTimeout(() => {
+    notificacion.classList.add('translate-x-full');
+    setTimeout(() => notificacion.remove(), 300);
+  }, 3000);
+}
+
+// === NAVEGACIÓN ===
+
+/**
+ * Configura la navegación suave
+ */
+function configurarNavegacion() {
+  const elementos = [
+    { id: 'viewCatalogBtn', target: 'catalogView' },
+    { id: 'heroCatalogBtn', target: 'catalogView' }
+  ];
+  
+  elementos.forEach(({ id, target }) => {
+    const elemento = document.getElementById(id);
+    const objetivo = document.getElementById(target);
+    
+    if (elemento && objetivo) {
+      elemento.addEventListener('click', (e) => {
+        e.preventDefault();
+        objetivo.scrollIntoView({ 
+          behavior: 'smooth',
+          block: 'start'
+        });
+      });
+    }
+  });
+  
+  console.log("🧭 Navegación configurada");
+}
