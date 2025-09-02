@@ -722,3 +722,159 @@ function setupAdminToolbar() {
     addEventListenerSafe('addProductBtn', 'click', () => openProductModal());
     addEventListenerSafe('templateBtn', 'click', openTemplateModal);
 }
+// === GESTIÓN DE PRODUCTOS ===
+
+function openProductModal(product = null) {
+    currentEditingProduct = product;
+    const modal = getElementById('productModal');
+    const title = getElementById('productModalTitle');
+
+    updateProductCategorySelect();
+
+    if (product) {
+        if (title) title.textContent = 'Editar Producto';
+        fillProductForm(product);
+        console.log(`📝 Editando producto: ${product.nombre} - 2025-09-02 18:13:58`);
+    } else {
+        if (title) title.textContent = 'Agregar Producto';
+        resetProductForm();
+        console.log('➕ Agregando nuevo producto - 2025-09-02 18:13:58');
+    }
+
+    if (modal) modal.classList.remove('hidden');
+}
+
+function fillProductForm(product) {
+    setElementValue('productName', product.nombre || '');
+    setElementValue('productDescription', product.descripcion || '');
+    setElementValue('productPrice', product.precio || '');
+    setElementValue('productCategory', product.categoria || '');
+    setElementValue('productImage', product.imagen || '');
+}
+
+function resetProductForm() {
+    const form = getElementById('productForm');
+    if (form) form.reset();
+}
+
+function closeProductModal() {
+    const modal = getElementById('productModal');
+    if (modal) modal.classList.add('hidden');
+    currentEditingProduct = null;
+}
+
+function handleProductSubmit(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(e.target);
+    const productName = formData.get('name');
+    
+    if (!productName || !formData.get('price') || !formData.get('category')) {
+        showNotification('Por favor completa todos los campos obligatorios', 'error');
+        return;
+    }
+    
+    const productData = {
+        id: currentEditingProduct ? currentEditingProduct.id : Date.now(),
+        nombre: productName,
+        descripcion: formData.get('description') || '',
+        precio: parseFloat(formData.get('price')),
+        categoria: formData.get('category'),
+        imagen: formData.get('image') || generateFallbackImage(productName),
+        oferta: Math.random() > 0.7,
+        fechaCreacion: '2025-09-02 18:13:58',
+        timestampCreacion: new Date().toISOString(),
+        creadoPor: 'Gonzapereyraa'
+    };
+
+    let productos = getStoredProducts();
+
+    if (currentEditingProduct) {
+        const index = productos.findIndex(p => p.id === currentEditingProduct.id);
+        if (index !== -1) {
+            productos[index] = { 
+                ...productos[index], 
+                ...productData, 
+                fechaModificacion: '2025-09-02 18:13:58',
+                timestampModificacion: new Date().toISOString()
+            };
+        }
+        console.log(`✅ Producto actualizado: ${productName} - Gonzapereyraa`);
+        showNotification('Producto actualizado correctamente', 'success');
+    } else {
+        productos.push(productData);
+        console.log(`➕ Producto agregado: ${productName} - Gonzapereyraa`);
+        showNotification('Producto agregado correctamente', 'success');
+    }
+
+    saveProducts(productos);
+    closeProductModal();
+    
+    // Crear backup automático
+    crearBackupAutomatico();
+    
+    // Recargar productos sin recargar página completa
+    if (window.recargarProductos) {
+        setTimeout(() => {
+            window.recargarProductos();
+            setTimeout(() => {
+                if (isEditMode) addEditableElements();
+            }, 200);
+        }, 500);
+    } else {
+        setTimeout(() => {
+            window.location.reload();
+        }, 1000);
+    }
+}
+
+function updateProductCategorySelect() {
+    const categorySelect = getElementById('productCategory');
+    if (!categorySelect) return;
+    
+    const productos = getStoredProducts();
+    const categorias = [...new Set(productos.map(p => p.categoria))];
+    
+    const currentValue = categorySelect.value;
+    categorySelect.innerHTML = '<option value="">Seleccionar categoría</option>';
+    
+    const categoriasDefault = ['Electrónicos', 'Ropa', 'Hogar', 'Deportes', 'Accesorios'];
+    const todasCategorias = [...new Set([...categoriasDefault, ...categorias])];
+    
+    todasCategorias.forEach(category => {
+        const option = document.createElement('option');
+        option.value = category;
+        option.textContent = category;
+        categorySelect.appendChild(option);
+    });
+    
+    if (currentValue) categorySelect.value = currentValue;
+}
+
+function setupCategoryManagement() {
+    setTimeout(() => {
+        const categoryContainer = getElementById('categoryContainer');
+        if (!categoryContainer || categoryContainer.querySelector('.add-category-btn')) return;
+
+        const addCategoryBtn = document.createElement('button');
+        addCategoryBtn.type = 'button';
+        addCategoryBtn.className = 'add-category-btn mt-2 text-sm text-indigo-600 hover:text-indigo-800 transition';
+        addCategoryBtn.innerHTML = '<i class="fas fa-plus mr-1"></i>Agregar nueva categoría';
+        addCategoryBtn.addEventListener('click', addNewCategory);
+        categoryContainer.appendChild(addCategoryBtn);
+    }, 500);
+}
+
+function addNewCategory() {
+    const categoryName = prompt('Ingresa el nombre de la nueva categoría:');
+    if (categoryName && categoryName.trim()) {
+        const trimmedName = categoryName.trim();
+        updateProductCategorySelect();
+        
+        const productCategory = getElementById('productCategory');
+        if (productCategory) productCategory.value = trimmedName;
+        
+        console.log(`📂 Nueva categoría agregada: ${trimmedName} - Gonzapereyraa - 2025-09-02 18:13:58`);
+        showNotification(`Categoría "${trimmedName}" agregada`, 'success');
+    }
+}
