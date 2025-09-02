@@ -563,3 +563,68 @@ function removerEstilosAdmin() {
         console.log('🗑️ Estilos de admin removidos - 2025-09-02 18:13:58');
     }
 }
+
+// === MODO EDICIÓN ===
+
+function enterEditMode() {
+    console.log('🔧 Entrando en modo edición - Gonzapereyraa...');
+    console.log('🕐 Hora de entrada: 2025-09-02 18:13:58 UTC');
+    
+    isEditMode = true;
+    
+    // Cargar estilos de admin dinámicamente PRIMERO
+    cargarEstilosAdmin();
+    
+    // Asegurar que la toolbar esté visible
+    const toolbar = getElementById('adminToolbar');
+    if (toolbar) {
+        toolbar.style.display = 'block';
+        toolbar.style.visibility = 'visible';
+        toolbar.style.opacity = '1';
+        console.log('👁️ Toolbar admin forzado a visible');
+    }
+    
+    // Aplicar clases después de un pequeño delay para asegurar que los estilos se carguen
+    setTimeout(() => {
+        document.body.classList.add('edit-mode');
+        console.log('📝 Clase edit-mode agregada al body');
+        
+        if (toolbar) {
+            toolbar.classList.add('active');
+            console.log('✅ Toolbar admin activado con clase active');
+        }
+        
+        const loginBtn = getElementById('loginBtn');
+        if (loginBtn) {
+            loginBtn.innerHTML = '<i class="fas fa-sign-out-alt text-xl"></i>';
+            loginBtn.title = 'Salir del modo administración';
+        }
+        
+        // Agregar elementos editables después de que los estilos se carguen
+        setTimeout(() => {
+            addEditableElements();
+            console.log('🎨 Elementos editables agregados');
+        }, 300);
+        
+    }, 200);
+    
+    console.log('🎯 Modo edición activado para Gonzapereyraa - 2025-09-02 18:13:58');
+}
+
+function exitEditMode() {
+    console.log('🚪 Saliendo del modo edición...');
+    console.log('🕐 Hora de salida: 2025-09-02 18:13:58 UTC');
+    
+    isEditMode = false;
+    
+    // Limpiar completamente el modo admin
+    limpiarModoAdmin();
+    
+    const loginBtn = getElementById('loginBtn');
+    if (loginBtn) {
+        loginBtn.innerHTML = '<i class="fas fa-user-shield text-xl"></i>';
+        loginBtn.title = 'Panel de Administración';
+    }
+    
+    console.log('✅ Modo edición desactivado - 2025-09-02 18:13:58');
+}
