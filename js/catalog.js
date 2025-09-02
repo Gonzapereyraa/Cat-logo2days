@@ -510,3 +510,120 @@ function obtenerEmojiProducto(nombre) {
   
   return '📦';
 }
+
+/**
+ * Configura botones de agregar al carrito
+ */
+function configurarBotonesCarrito(contenedor, productos) {
+  const botones = contenedor.querySelectorAll('.add-to-cart');
+  
+  botones.forEach(boton => {
+    // Remover listeners anteriores
+    boton.replaceWith(boton.cloneNode(true));
+    const nuevoBoton = contenedor.querySelector(`[data-id="${boton.dataset.id}"]`);
+    
+    nuevoBoton.addEventListener('click', function(e) {
+      e.preventDefault();
+      e.stopPropagation();
+      
+      const id = parseInt(this.dataset.id);
+      const producto = productos.find(p => p.id === id);
+      
+      if (producto) {
+        agregarAlCarrito(producto);
+      }
+    });
+  });
+}
+
+/**
+ * Configura filtros de búsqueda y ordenamiento
+ */
+function configurarFiltros(productos, config) {
+  if (!config.showFilters) return;
+  
+  const searchInput = document.getElementById('searchInput');
+  const categoryFilter = document.getElementById('categoryFilter');
+  const sortFilter = document.getElementById('sortFilter');
+  
+  if (!searchInput || !categoryFilter || !sortFilter) {
+    return; // Sin warning, simplemente salir
+  }
+  
+  function aplicarFiltros() {
+    const busqueda = searchInput.value.toLowerCase().trim();
+    const categoria = categoryFilter.value;
+    const orden = sortFilter.value;
+    
+    // Filtrar productos
+    let productosFiltrados = productos.filter(producto => {
+      const coincideBusqueda = !busqueda || 
+        producto.nombre.toLowerCase().includes(busqueda) || 
+        producto.descripcion.toLowerCase().includes(busqueda);
+      
+      const coincideCategoria = !categoria || producto.categoria === categoria;
+      
+      return coincideBusqueda && coincideCategoria;
+    });
+    
+    // Ordenar productos
+    if (orden) {
+      const ordenamientos = {
+        'priceAsc': (a, b) => a.precio - b.precio,
+        'priceDesc': (a, b) => b.precio - a.precio,
+        'nameAsc': (a, b) => a.nombre.localeCompare(b.nombre),
+        'nameDesc': (a, b) => b.nombre.localeCompare(a.nombre),
+        'recent': (a, b) => b.id - a.id
+      };
+      
+      if (ordenamientos[orden]) {
+        productosFiltrados.sort(ordenamientos[orden]);
+      }
+    }
+    
+    // Actualizar vista
+    mostrarProductos(productosFiltrados, config);
+  }
+  
+  // Configurar eventos de filtros con validación
+  if (searchInput) searchInput.addEventListener('input', aplicarFiltros);
+  if (categoryFilter) categoryFilter.addEventListener('change', aplicarFiltros);
+  if (sortFilter) sortFilter.addEventListener('change', aplicarFiltros);
+  
+  console.log("🔍 Filtros configurados");
+}
+
+/**
+ * Muestra mensaje cuando no hay productos
+ */
+function mostrarMensajeVacio() {
+  const contenedor = document.getElementById('productsContainer');
+  if (!contenedor) return;
+  
+  contenedor.innerHTML = `
+    <div class="col-span-full text-center py-12">
+      <i class="fas fa-box-open text-4xl text-gray-400 mb-4"></i>
+      <h3 class="text-xl font-semibold text-gray-300 mb-2">No hay productos disponibles</h3>
+      <p class="text-gray-400">Los productos se cargarán automáticamente</p>
+    </div>
+  `;
+}
+
+/**
+ * Muestra error de carga
+ */
+function mostrarErrorCarga() {
+  const contenedor = document.getElementById('productsContainer');
+  if (!contenedor) return;
+  
+  contenedor.innerHTML = `
+    <div class="col-span-full text-center py-12">
+      <i class="fas fa-exclamation-triangle text-4xl text-red-400 mb-4"></i>
+      <h3 class="text-xl font-semibold text-red-300 mb-2">Error al cargar productos</h3>
+      <p class="text-red-400">Por favor, recarga la página</p>
+      <button onclick="window.location.reload()" class="mt-4 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition">
+        <i class="fas fa-redo mr-2"></i>Recargar
+      </button>
+    </div>
+  `;
+}
