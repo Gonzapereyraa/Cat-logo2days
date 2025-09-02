@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catálogo Digital</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link id="plantillaCSS" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body class="min-h-screen gradient-bg text-gray-100 flex flex-col">
+  
+  <!-- Barra de herramientas de administración -->
+  <div id="adminToolbar" class="admin-toolbar">
+    <div class="container mx-auto flex flex-wrap justify-between items-center">
+      <div class="flex items-center space-x-4">
+        <i class="fas fa-tools text-yellow-400"></i>
+        <span class="font-bold">Modo Edición Activo</span>
+        <span class="text-sm opacity-75 hidden md:block">Haz clic en cualquier elemento para editarlo</span>
+      </div>
+      <div class="flex items-center space-x-2 md:space-x-4">
+        <button id="saveAllBtn" class="bg-green-600 hover:bg-green-700 px-3 py-2 rounded-lg transition text-sm">
+          <i class="fas fa-save mr-1"></i><span class="hidden md:inline">Guardar</span>
+        </button>
+        <button id="addProductBtn" class="bg-blue-600 hover:bg-blue-700 px-3 py-2 rounded-lg transition text-sm">
+          <i class="fas fa-plus mr-1"></i><span class="hidden md:inline">Producto</span>
+        </button>
+        <button id="templateBtn" class="bg-purple-600 hover:bg-purple-700 px-3 py-2 rounded-lg transition text-sm">
+          <i class="fas fa-palette mr-1"></i><span class="hidden md:inline">Plantilla</span>
+        </button>
+        <button id="exitEditBtn" class="bg-red-600 hover:bg-red-700 px-3 py-2 rounded-lg transition text-sm">
+          <i class="fas fa-times mr-1"></i><span class="hidden md:inline">Salir</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <div class="flex-1 container mx-auto px-4 py-8">
+    <!-- Header -->
+    <header class="flex justify-between items-center mb-8 glass-card p-4 rounded-lg">
+      <div class="flex items-center space-x-3">
+        <i class="fas fa-store text-indigo-400 text-2xl"></i>
+        <h1 id="headerTitle" class="text-2xl md:text-3xl font-bold editable" data-field="siteTitle">Tu Catálogo Digital</h1>
+      </div>
+      <div class="flex items-center space-x-4">
+        <a href="#catalogView" id="viewCatalogBtn" class="hidden md:flex px-4 py-2 bg-white text-indigo-600 rounded-lg font-medium hover:bg-gray-100 transition">Catálogo</a>
+        
+        <button id="loginBtn" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition" title="Panel de Administración">
+          <i class="fas fa-user-shield text-xl"></i>
+        </button>
+        
+        <div class="relative">
+          <button id="cartButton" class="p-2 rounded-full hover:bg-white hover:bg-opacity-20 transition" title="Carrito de Compras">
+            <i class="fas fa-shopping-cart text-xl"></i>
+            <span id="cartCount" class="absolute -top-1 -right-1 bg-red-500 text-white text-xs font-bold rounded-full h-5 w-5 flex items-center justify-center hidden">0</span>
+          </button>
+        </div>
+      </div>
+    </header>
+ <!-- Hero Section -->
+    <section class="glass-card p-6 md:p-8 rounded-lg text-center mb-10 fade-in">
+      <h2 id="heroTitle" class="text-2xl md:text-4xl font-bold mb-4 editable" data-field="heroTitle">Bienvenido a tu Catálogo Digital</h2>
+      <p id="heroSubtitle" class="mb-6 text-base md:text-lg text-gray-300 editable" data-field="heroSubtitle">Explora productos, filtra por categorías y gestiona tu catálogo online fácilmente.</p>
+      <a href="#catalogView" id="heroCatalogBtn" class="inline-flex items-center px-6 py-3 bg-indigo-600 text-white rounded-xl font-medium hover:bg-indigo-700 transition shadow-lg">
+        <i class="fas fa-eye mr-2"></i>Ver Catálogo
+      </a>
+    </section>
+
+    <!-- Catalog View -->
+    <div id="catalogView">
+      <!-- Filtros -->
+      <div id="filtersContainer" class="glass-card p-4 md:p-6 rounded-lg mb-8">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div class="w-full md:w-1/3">
+            <div class="relative">
+              <input type="text" id="searchInput" placeholder="Buscar productos..." class="w-full px-4 py-2 pl-10 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <i class="fas fa-search absolute left-3 top-3 text-gray-300"></i>
+            </div>
+          </div>
+          <div class="w-full md:w-1/3">
+            <select id="categoryFilter" class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Todas las categorías</option>
+            </select>
+          </div>
+          <div class="w-full md:w-1/3">
+            <select id="sortFilter" class="w-full px-4 py-2 rounded-lg bg-white bg-opacity-20 border border-white border-opacity-30 focus:outline-none focus:ring-2 focus:ring-indigo-500">
+              <option value="">Ordenar por</option>
+              <option value="priceAsc">Precio: Menor a Mayor</option>
+              <option value="priceDesc">Precio: Mayor a Menor</option>
+              <option value="nameAsc">Nombre: A-Z</option>
+              <option value="nameDesc">Nombre: Z-A</option>
+              <option value="recent">Más Recientes</option>
+            </select>
+          </div>
+        </div>
+      </div>
+
+      <div id="productsContainer" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <!-- Los productos se cargan dinámicamente -->
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+  </body>
+</html>
