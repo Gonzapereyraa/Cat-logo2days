@@ -125,6 +125,7 @@ function crearBackupAutomatico() {
         console.error('❌ Error al crear backup:', error);
     }
 }
+
 /**
  * Configurar guardado automático cada 5 minutos
  */
@@ -147,6 +148,10 @@ function configurarGuardadoAutomatico() {
     
     console.log('⏰ Guardado automático configurado cada 5 minutos - 2025-09-02 18:13:58');
 }
+
+/**
+ * Limpia modo admin al cargar la página
+ */
 function limpiarModoAdminInicial() {
     // Ocultar barra admin si no está en modo edición
     const toolbar = document.getElementById('adminToolbar');
@@ -714,6 +719,29 @@ function removeEditableElements() {
     document.querySelectorAll('.product-edit-controls').forEach(controls => controls.remove());
     console.log('🗑️ Elementos editables removidos - 2025-09-02 18:13:58');
 }
+
+// === FUNCIÓN DEBUG ===
+
+function debugModoAdmin() {
+    console.log('=== 🔍 DEBUG MODO ADMIN - Gonzapereyraa ===');
+    console.log('📅 Fecha: 2025-09-02 18:13:58 UTC');
+    console.log('✅ isEditMode:', isEditMode);
+    
+    const toolbar = getElementById('adminToolbar');
+    console.log('🏗️ adminToolbar elemento:', !!toolbar);
+    if (toolbar) {
+        console.log('👁️ toolbar display:', toolbar.style.display);
+        console.log('🎭 toolbar visibility:', toolbar.style.visibility);
+        console.log('🏷️ toolbar clases:', toolbar.className);
+    }
+    
+    console.log('📄 body clases:', document.body.className);
+    console.log('🎨 estilos admin cargados:', !!document.getElementById('admin-styles'));
+    console.log('📝 elementos .editable:', document.querySelectorAll('.editable').length);
+    console.log('📦 elementos .product-card:', document.querySelectorAll('.product-card').length);
+    console.log('=======================================');
+}
+
 // === BARRA DE HERRAMIENTAS ===
 
 function setupAdminToolbar() {
@@ -722,6 +750,7 @@ function setupAdminToolbar() {
     addEventListenerSafe('addProductBtn', 'click', () => openProductModal());
     addEventListenerSafe('templateBtn', 'click', openTemplateModal);
 }
+
 // === GESTIÓN DE PRODUCTOS ===
 
 function openProductModal(product = null) {
@@ -1002,3 +1031,350 @@ function applySelectedTemplate() {
         window.location.reload();
     }, 1000);
 }
+
+// === MODALES ===
+
+function setupModals() {
+    addEventListenerSafe('closeProductModal', 'click', closeProductModal);
+    addEventListenerSafe('cancelProductModal', 'click', closeProductModal);
+    addEventListenerSafe('productForm', 'submit', handleProductSubmit);
+
+    addEventListenerSafe('saveTextEdit', 'click', saveTextEdit);
+    addEventListenerSafe('cancelTextEdit', 'click', closeTextEditModal);
+
+    addEventListenerSafe('closeTemplateModal', 'click', closeTemplateModal);
+    addEventListenerSafe('applyTemplate', 'click', applySelectedTemplate);
+
+    setTimeout(() => {
+        document.querySelectorAll('.template-option').forEach(option => {
+            option.addEventListener('click', (e) => {
+                const template = e.currentTarget.dataset.template;
+                if (template) {
+                    selectTemplate(template);
+                }
+            });
+        });
+    }, 500);
+}
+
+function editElement(element) {
+    const field = element.dataset.field || element.id;
+    const currentValue = element.textContent;
+    
+    currentEditingField = { element, field };
+    
+    const textEditInput = getElementById('textEditInput');
+    const modal = getElementById('textEditModal');
+    
+    if (textEditInput) textEditInput.value = currentValue;
+    if (modal) modal.classList.remove('hidden');
+    
+    console.log(`✏️ Editando elemento: ${field} - Gonzapereyraa - 2025-09-02 18:13:58`);
+}
+
+function saveTextEdit() {
+    const textEditInput = getElementById('textEditInput');
+    if (!textEditInput || !currentEditingField) return;
+    
+    const newValue = textEditInput.value.trim();
+    const { element, field } = currentEditingField;
+    
+    // Validar que el texto no esté vacío
+    if (!newValue) {
+        showNotification('El texto no puede estar vacío', 'error');
+        return;
+    }
+    
+    // Actualizar el elemento en la página
+    element.textContent = newValue;
+    
+    try {
+        // Obtener textos guardados existentes
+        const savedTexts = JSON.parse(localStorage.getItem('editableTexts') || '{}');
+        
+        // Guardar el nuevo valor con metadatos
+        savedTexts[field] = newValue;
+        savedTexts[`${field}_lastModified`] = '2025-09-02 18:13:58';
+        savedTexts[`${field}_timestampModified`] = new Date().toISOString();
+        savedTexts[`${field}_modifiedBy`] = 'Gonzapereyraa';
+        
+        // Guardar en localStorage
+        localStorage.setItem('editableTexts', JSON.stringify(savedTexts));
+        
+        // Guardar configuración del sitio
+        guardarConfiguracionSitio();
+        
+        closeTextEditModal();
+        
+        console.log(`💾 Texto persistido para ${field}: "${newValue}" por Gonzapereyraa - 2025-09-02 18:13:58`);
+        showNotification(`Texto "${field}" actualizado y guardado`, 'success');
+        
+        // Crear backup automático
+        crearBackupAutomatico();
+        
+    } catch (error) {
+        console.error('❌ Error al guardar texto:', error);
+        showNotification('Error al guardar el texto', 'error');
+    }
+}
+
+function closeTextEditModal() {
+    const modal = getElementById('textEditModal');
+    if (modal) modal.classList.add('hidden');
+    currentEditingField = null;
+}
+
+// === UTILIDADES ===
+
+function getElementById(id) {
+    const element = document.getElementById(id);
+    if (!element) {
+        console.warn(`⚠️ Elemento no encontrado: ${id} - 2025-09-02 18:13:58`);
+    }
+    return element;
+}
+
+function addEventListenerSafe(elementId, event, handler) {
+    const element = getElementById(elementId);
+    if (element) {
+        element.addEventListener(event, handler);
+        return true;
+    }
+    return false;
+}
+
+function setElementValue(elementId, value) {
+    const element = getElementById(elementId);
+    if (element) element.value = value;
+}
+
+function getStoredProducts() {
+    try {
+        return JSON.parse(localStorage.getItem('productos') || '[]');
+    } catch (e) {
+        console.error('❌ Error al obtener productos:', e);
+        return [];
+    }
+}
+
+function saveProducts(productos) {
+    try {
+        const metadata = {
+            lastModified: '2025-09-02 18:13:58',
+            timestampModified: new Date().toISOString(),
+            modifiedBy: 'Gonzapereyraa',
+            version: '1.0.1'
+        };
+        
+        localStorage.setItem('productos', JSON.stringify(productos));
+        localStorage.setItem('productos_metadata', JSON.stringify(metadata));
+        
+        console.log(`💾 ${productos.length} productos guardados por Gonzapereyraa - 2025-09-02 18:13:58`);
+    } catch (e) {
+        console.error('❌ Error al guardar productos:', e);
+    }
+}
+
+function generateFallbackImage(productName) {
+    const emoji = getProductEmoji(productName);
+    const encodedText = encodeURIComponent(`${emoji} ${productName.substring(0, 15)}`);
+    return `https://via.placeholder.com/400x300/6B7280/FFFFFF?text=${encodedText}`;
+}
+
+function getProductEmoji(productName) {
+    const name = productName.toLowerCase();
+    const emojiMap = {
+        'phone': '📱', 'smartphone': '📱', 'teléfono': '📱',
+        'laptop': '💻', 'computador': '💻',
+        'auricular': '🎧', 'headphone': '🎧',
+        'camiseta': '👕', 'shirt': '👕',
+        'zapatilla': '👟', 'shoe': '👟',
+        'reloj': '⌚', 'watch': '⌚',
+        'mochila': '🎒', 'backpack': '🎒',
+        'silla': '🪑', 'chair': '🪑',
+        'licuadora': '🥤', 'blender': '🥤'
+    };
+    
+    for (const [key, emoji] of Object.entries(emojiMap)) {
+        if (name.includes(key)) return emoji;
+    }
+    return '📦';
+}
+
+function saveAllChanges() {
+    try {
+        // Crear backup completo
+        crearBackupAutomatico();
+        
+        // Guardar configuración
+        guardarConfiguracionSitio();
+        
+        // Mostrar estadísticas
+        const stats = mostrarEstadisticasDatos();
+        
+        const timestamp = '2025-09-02 18:13:58';
+        const metadata = {
+            lastSave: timestamp,
+            timestampSave: new Date().toISOString(),
+            savedBy: 'Gonzapereyraa',
+            browserInfo: navigator.userAgent.substring(0, 100)
+        };
+        
+        localStorage.setItem('admin_last_save', JSON.stringify(metadata));
+        
+        console.log(`💾 Guardado completo por Gonzapereyraa - ${timestamp}`);
+        
+        showNotification(
+            `✅ Todo guardado - ${stats?.textosPersonalizados || 0} textos, ${stats?.totalProductos || 0} productos - ${timestamp}`, 
+            'success'
+        );
+        
+    } catch (error) {
+        console.error('❌ Error al guardar:', error);
+        showNotification('Error al guardar los cambios', 'error');
+    }
+}
+
+function showNotification(message, type = 'success') {
+    const notification = document.createElement('div');
+    notification.className = `fixed top-20 right-4 z-50 p-4 rounded-lg shadow-lg ${
+        type === 'success' ? 'bg-green-500' : 'bg-red-500'
+    } text-white transition-all transform translate-x-full max-w-sm`;
+    
+    const currentTime = new Date().toLocaleTimeString('es-ES');
+    
+    notification.innerHTML = `
+        <div class="flex items-center">
+            <i class="fas ${type === 'success' ? 'fa-check-circle' : 'fa-exclamation-triangle'} mr-2"></i>
+            <span class="text-sm">${message}</span>
+            <span class="text-xs opacity-75 ml-2">${currentTime}</span>
+        </div>
+    `;
+    
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+        notification.classList.remove('translate-x-full');
+    }, 100);
+    
+    setTimeout(() => {
+        notification.classList.add('translate-x-full');
+        setTimeout(() => notification.remove(), 300);
+    }, 4000);
+}
+
+// === OBSERVADOR DE CAMBIOS EN EL DOM ===
+
+const observer = new MutationObserver((mutations) => {
+    if (isEditMode) {
+        mutations.forEach((mutation) => {
+            if (mutation.type === 'childList' && mutation.addedNodes.length > 0) {
+                setTimeout(() => {
+                    addEditableElements();
+                }, 200);
+            }
+        });
+    }
+});
+
+setTimeout(() => {
+    const productsContainer = getElementById('productsContainer');
+    if (productsContainer) {
+        observer.observe(productsContainer, {
+            childList: true,
+            subtree: true
+        });
+        console.log('👁️ Observador DOM activado para Gonzapereyraa - 2025-09-02 18:13:58');
+    }
+}, 1000);
+
+// === CARGA INICIAL DE DATOS ===
+
+// Cargar datos guardados cuando la página esté lista
+document.addEventListener('DOMContentLoaded', function() {
+    // Esperar un poco para que el DOM se cargue completamente
+    setTimeout(() => {
+        cargarTextosGuardados();
+        console.log('🔄 Datos de Gonzapereyraa cargados automáticamente - 2025-09-02 18:13:58');
+    }, 1000);
+});
+/**
+ * Cargar imágenes de productos del catálogo en plantillas
+ * Usuario: Gonzapereyraa
+ * Fecha: 2025-09-02 18:26:08
+ */
+function cargarImagenesPlantillas() {
+    try {
+        const productos = getStoredProducts();
+        console.log(`🖼️ Cargando imágenes para plantillas - Gonzapereyraa - 2025-09-02 18:26:08`);
+        
+        if (productos.length > 0) {
+            // Mapeo de productos por plantilla
+            const productosParaPlantillas = {
+                'clasica': productos.find(p => 
+                    p.categoria?.toLowerCase().includes('electrón') || 
+                    p.nombre?.toLowerCase().includes('laptop') ||
+                    p.nombre?.toLowerCase().includes('computador')
+                ),
+                'moderna': productos.find(p => 
+                    p.nombre?.toLowerCase().includes('teléfono') ||
+                    p.nombre?.toLowerCase().includes('phone') ||
+                    p.nombre?.toLowerCase().includes('smartphone')
+                ),
+                'minimalista': productos.find(p => 
+                    p.nombre?.toLowerCase().includes('auricular') ||
+                    p.nombre?.toLowerCase().includes('headphone') ||
+                    p.categoria?.toLowerCase().includes('accesorio')
+                ),
+                'futurista': productos.find(p => 
+                    p.nombre?.toLowerCase().includes('reloj') ||
+                    p.nombre?.toLowerCase().includes('watch') ||
+                    p.nombre?.toLowerCase().includes('smart')
+                ),
+                'gamer': productos.find(p => 
+                    p.nombre?.toLowerCase().includes('gaming') ||
+                    p.nombre?.toLowerCase().includes('rgb') ||
+                    p.categoria?.toLowerCase().includes('gaming')
+                ),
+                'vintaje': productos.find(p => 
+                    p.nombre?.toLowerCase().includes('vintage') ||
+                    p.nombre?.toLowerCase().includes('retro') ||
+                    p.nombre?.toLowerCase().includes('clásico')
+                )
+            };
+            
+            // Actualizar imágenes encontradas
+            Object.entries(productosParaPlantillas).forEach(([template, producto]) => {
+                if (producto?.imagen) {
+                    actualizarImagenPlantilla(template, producto.imagen, producto.nombre);
+                }
+            });
+        }
+        
+        console.log('✅ Proceso de carga de imágenes completado - Gonzapereyraa');
+        
+    } catch (error) {
+        console.error('❌ Error al cargar imágenes de plantillas:', error);
+    }
+}
+
+function actualizarImagenPlantilla(template, imagenUrl, nombreProducto) {
+    const templateElement = document.querySelector(`[data-template="${template}"]`);
+    if (templateElement) {
+        const img = templateElement.querySelector('img');
+        if (img) {
+            img.src = imagenUrl;
+            img.alt = `${nombreProducto} - Plantilla ${template} - Gonzapereyraa`;
+            console.log(`🖼️ Imagen actualizada para ${template}: ${nombreProducto} - 2025-09-02 18:26:08`);
+        }
+    }
+}
+
+// Auto-cargar al inicializar
+document.addEventListener('DOMContentLoaded', function() {
+    setTimeout(() => {
+        cargarImagenesPlantillas();
+    }, 2000);
+});
+
+console.log('🎯 Panel de administración cargado - Usuario: Gonzapereyraa - 2025-09-02 18:13:58 UTC');
