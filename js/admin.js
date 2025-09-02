@@ -628,3 +628,97 @@ function exitEditMode() {
     
     console.log('✅ Modo edición desactivado - 2025-09-02 18:13:58');
 }
+
+function limpiarModoAdmin() {
+    // Remover estilos
+    removerEstilosAdmin();
+    
+    // Remover clases
+    document.body.classList.remove('edit-mode');
+    
+    // Ocultar y limpiar toolbar
+    const toolbar = getElementById('adminToolbar');
+    if (toolbar) {
+        toolbar.style.display = 'none';
+        toolbar.style.visibility = 'hidden';
+        toolbar.classList.remove('active');
+    }
+    
+    // Remover elementos editables
+    removeEditableElements();
+    
+    console.log('🧹 Modo admin completamente limpiado - 2025-09-02 18:13:58');
+}
+
+function addEditableElements() {
+    console.log('🎨 Agregando elementos editables...');
+    
+    // Agregar overlays de edición a elementos editables
+    const editableElements = document.querySelectorAll('.editable');
+    console.log(`📝 Encontrados ${editableElements.length} elementos editables`);
+    
+    editableElements.forEach(element => {
+        if (!element.querySelector('.edit-overlay')) {
+            const overlay = document.createElement('div');
+            overlay.className = 'edit-overlay';
+            overlay.innerHTML = '<i class="fas fa-edit"></i>';
+            overlay.addEventListener('click', (e) => {
+                e.stopPropagation();
+                editElement(element);
+            });
+            element.appendChild(overlay);
+        }
+    });
+
+    // Agregar controles de edición a productos
+    const productCards = document.querySelectorAll('.product-card, [data-id]');
+    console.log(`📦 Encontradas ${productCards.length} tarjetas de productos`);
+    
+    productCards.forEach(card => {
+        if (!card.querySelector('.product-edit-controls')) {
+            const productId = card.dataset.id;
+            if (productId) {
+                const controls = document.createElement('div');
+                controls.className = 'product-edit-controls absolute top-2 right-2 space-x-1 opacity-0 transition-opacity';
+                controls.innerHTML = `
+                    <button class="bg-blue-500 text-white p-1 rounded text-xs hover:bg-blue-600 transition" onclick="editProductAdmin(${productId})" title="Editar producto">
+                        <i class="fas fa-edit"></i>
+                    </button>
+                    <button class="bg-red-500 text-white p-1 rounded text-xs hover:bg-red-600 transition" onclick="deleteProductAdmin(${productId})" title="Eliminar producto">
+                        <i class="fas fa-trash"></i>
+                    </button>
+                `;
+                card.appendChild(controls);
+                
+                // Mostrar controles al hacer hover
+                card.addEventListener('mouseenter', () => {
+                    if (isEditMode) {
+                        controls.classList.remove('opacity-0');
+                        controls.classList.add('opacity-100');
+                    }
+                });
+                
+                card.addEventListener('mouseleave', () => {
+                    controls.classList.remove('opacity-100');
+                    controls.classList.add('opacity-0');
+                });
+            }
+        }
+    });
+    
+    console.log('✅ Elementos editables agregados correctamente - 2025-09-02 18:13:58');
+}
+
+function removeEditableElements() {
+    document.querySelectorAll('.edit-overlay').forEach(overlay => overlay.remove());
+    document.querySelectorAll('.product-edit-controls').forEach(controls => controls.remove());
+    console.log('🗑️ Elementos editables removidos - 2025-09-02 18:13:58');
+}
+// === BARRA DE HERRAMIENTAS ===
+
+function setupAdminToolbar() {
+    addEventListenerSafe('exitEditBtn', 'click', exitEditMode);
+    addEventListenerSafe('saveAllBtn', 'click', saveAllChanges);
+    addEventListenerSafe('addProductBtn', 'click', () => openProductModal());
+    addEventListenerSafe('templateBtn', 'click', openTemplateModal);
+}
