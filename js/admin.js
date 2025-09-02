@@ -917,3 +917,88 @@ window.deleteProductAdmin = function(id) {
         }
     }
 };
+
+// === PLANTILLAS ===
+
+function setupTemplateSelection() {
+    window.editarPlantilla = function(plantilla) {
+        console.log(`🎨 Seleccionando plantilla: ${plantilla} por Gonzapereyraa - 2025-09-02 18:13:58`);
+        
+        document.querySelectorAll('.template-option').forEach(option => {
+            option.classList.remove('border-indigo-500', 'bg-indigo-50');
+        });
+        
+        const selectedOption = document.querySelector(`[data-template="${plantilla}"]`);
+        if (selectedOption) {
+            selectedOption.classList.add('border-indigo-500', 'bg-indigo-50');
+        }
+        
+        selectedTemplate = plantilla;
+        console.log(`✅ Plantilla "${plantilla}" seleccionada`);
+    };
+}
+
+function openTemplateModal() {
+    const modal = getElementById('templateModal');
+    if (modal) modal.classList.remove('hidden');
+    
+    const currentTemplate = localStorage.getItem('plantillaGuardada') || 'clasica';
+    document.querySelectorAll('.template-option').forEach(option => {
+        option.classList.remove('border-indigo-500', 'bg-indigo-50');
+        
+        if (option.dataset.template === currentTemplate) {
+            option.classList.add('border-indigo-500', 'bg-indigo-50');
+            selectedTemplate = currentTemplate;
+        }
+    });
+    
+    console.log(`🎨 Modal de plantillas abierto. Plantilla actual: ${currentTemplate} - 2025-09-02 18:13:58`);
+}
+
+function closeTemplateModal() {
+    const modal = getElementById('templateModal');
+    if (modal) modal.classList.add('hidden');
+}
+
+function selectTemplate(templateName) {
+    document.querySelectorAll('.template-option').forEach(option => {
+        option.classList.remove('border-indigo-500', 'bg-indigo-50');
+    });
+
+    const selectedOption = document.querySelector(`[data-template="${templateName}"]`);
+    if (selectedOption) {
+        selectedOption.classList.add('border-indigo-500', 'bg-indigo-50');
+    }
+    
+    selectedTemplate = templateName;
+}
+
+function applySelectedTemplate() {
+    if (!selectedTemplate) {
+        showNotification('Por favor selecciona una plantilla', 'error');
+        return;
+    }
+    
+    localStorage.setItem('plantillaGuardada', selectedTemplate);
+    
+    // Guardar metadatos de plantilla
+    const templateMetadata = {
+        plantilla: selectedTemplate,
+        fechaCambio: '2025-09-02 18:13:58',
+        timestampCambio: new Date().toISOString(),
+        cambiadoPor: 'Gonzapereyraa'
+    };
+    localStorage.setItem('templateMetadata', JSON.stringify(templateMetadata));
+    
+    closeTemplateModal();
+    
+    console.log(`🎨 Plantilla aplicada: ${selectedTemplate} por Gonzapereyraa - 2025-09-02 18:13:58`);
+    showNotification(`Plantilla "${selectedTemplate}" aplicada correctamente`, 'success');
+    
+    // Crear backup automático
+    crearBackupAutomatico();
+    
+    setTimeout(() => {
+        window.location.reload();
+    }, 1000);
+}
