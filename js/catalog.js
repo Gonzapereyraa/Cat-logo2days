@@ -334,3 +334,179 @@ function configurarInterfazUsuario(config) {
     categoriasContainer.style.display = config.showCategoryTags ? 'flex' : 'none';
   }
 }
+
+/**
+ * Actualiza el filtro de categorías
+ */
+function actualizarFiltrosCategorias(productos) {
+  const selectCategorias = document.getElementById('categoryFilter');
+  if (!selectCategorias) {
+    return; // Sin warning, simplemente salir
+  }
+  
+  const categorias = [...new Set(productos.map(p => p.categoria))];
+  
+  // Limpiar opciones existentes excepto la primera
+  while (selectCategorias.options.length > 1) {
+    selectCategorias.remove(1);
+  }
+  
+  // Agregar categorías
+  categorias.forEach(categoria => {
+    const option = document.createElement('option');
+    option.value = categoria;
+    option.textContent = categoria;
+    selectCategorias.appendChild(option);
+  });
+  
+  console.log(`📂 ${categorias.length} categorías actualizadas`);
+}
+
+/**
+ * Muestra productos destacados (si están configurados)
+ */
+function mostrarProductosDestacados(productos, config) {
+  const featuredContainer = document.getElementById('featuredProducts');
+  
+  // Si no existe el contenedor o no hay productos destacados, salir
+  if (!featuredContainer || !config.featuredProducts || config.featuredProducts.length === 0) {
+    if (featuredContainer) featuredContainer.classList.add('hidden');
+    return;
+  }
+  
+  console.log("⭐ Mostrando productos destacados");
+  
+  featuredContainer.innerHTML = '';
+  featuredContainer.classList.remove('hidden');
+  
+  // Crear encabezado
+  const header = document.createElement('h2');
+  header.className = 'text-2xl font-bold text-center mb-6 text-white';
+  header.textContent = 'Productos Destacados';
+  featuredContainer.appendChild(header);
+  
+  // Crear grid de productos
+  const productsGrid = document.createElement('div');
+  productsGrid.className = 'grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6';
+  featuredContainer.appendChild(productsGrid);
+  
+  // Agregar productos destacados
+  config.featuredProducts.forEach(id => {
+    const producto = productos.find(p => p.id === id);
+    if (producto) {
+      const card = crearTarjetaProducto(producto, config, true);
+      productsGrid.appendChild(card);
+    }
+  });
+  
+  // Configurar botones del carrito
+  configurarBotonesCarrito(featuredContainer, productos);
+}
+
+/**
+ * Muestra los productos en el contenedor principal
+ */
+function mostrarProductos(productos, config) {
+  const contenedor = document.getElementById('productsContainer');
+  if (!contenedor) {
+    console.error("❌ Contenedor de productos no encontrado");
+    return;
+  }
+  
+  console.log(`🏪 Mostrando ${productos.length} productos`);
+  
+  // Limpiar contenedor
+  contenedor.innerHTML = '';
+  
+  // Filtrar productos destacados para no duplicar
+  const idsDestacados = config.featuredProducts || [];
+  const productosRegulares = productos.filter(p => !idsDestacados.includes(p.id));
+  
+  // Limitar productos según configuración
+  const productosAMostrar = productosRegulares.slice(0, config.productsPerPage || 12);
+  
+  if (productosAMostrar.length === 0) {
+    mostrarMensajeVacio();
+    return;
+  }
+  
+  // Crear tarjetas de productos
+  productosAMostrar.forEach(producto => {
+    const card = crearTarjetaProducto(producto, config);
+    contenedor.appendChild(card);
+  });
+  
+  // Configurar botones del carrito
+  configurarBotonesCarrito(contenedor, productos);
+  
+  console.log(`✅ ${productosAMostrar.length} productos mostrados`);
+}
+
+/**
+ * Crea una tarjeta de producto
+ */
+function crearTarjetaProducto(producto, config, esDestacado = false) {
+  const card = document.createElement('div');
+  card.className = `relative glass-card rounded-lg overflow-hidden shadow-lg hover:scale-105 hover:shadow-xl transition product-card`;
+  card.dataset.id = producto.id;
+  card.dataset.categoria = producto.categoria;
+  card.dataset.precio = producto.precio;
+  
+  const imagenFallback = generarImagenFallback(producto.nombre);
+  
+  card.innerHTML = `
+    ${producto.oferta && config.showOfferBadge ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full z-10">Oferta</span>' : ''}
+    ${esDestacado ? '<span class="absolute top-2 right-2 bg-yellow-500 text-yellow-900 text-xs px-2 py-1 rounded-full z-10 font-bold">⭐ Destacado</span>' : ''}
+    <img src="${producto.imagen}" alt="${producto.nombre}" class="w-full h-48 object-cover" 
+         onerror="this.src='${imagenFallback}';">
+    <div class="p-4">
+      <div class="flex justify-between items-start mb-2">
+        <h3 class="text-lg font-bold line-clamp-2 flex-1">${producto.nombre}</h3>
+        ${config.showCategoryTags ? `<span class="bg-indigo-600 text-white px-2 py-1 rounded text-xs whitespace-nowrap ml-2">${producto.categoria}</span>` : ''}
+      </div>
+      <p class="text-sm text-gray-300 mb-3 line-clamp-2">${producto.descripcion}</p>
+      <div class="flex justify-between items-center">
+        <span class="font-bold text-indigo-400 text-lg">$${Number(producto.precio).toFixed(2)}</span>
+        <button class="add-to-cart px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition" data-id="${producto.id}">
+          <i class="fas fa-cart-plus mr-1"></i>Agregar
+        </button>
+      </div>
+    </div>
+  `;
+  
+  return card;
+}
+
+/**
+ * Genera imagen de fallback personalizada
+ */
+function generarImagenFallback(nombreProducto) {
+  const emoji = obtenerEmojiProducto(nombreProducto);
+  const textoEncoded = encodeURIComponent(`${emoji} ${nombreProducto.substring(0, 12)}`);
+  return `https://via.placeholder.com/600x400/4F46E5/FFFFFF?text=${textoEncoded}`;
+}
+
+/**
+ * Obtiene emoji apropiado según el tipo de producto
+ */
+function obtenerEmojiProducto(nombre) {
+  const nombreLower = nombre.toLowerCase();
+  
+  const emojis = {
+    'smartphone': '📱', 'phone': '📱', 'teléfono': '📱',
+    'laptop': '💻', 'computador': '💻',
+    'auricular': '🎧', 'headphone': '🎧',
+    'zapatilla': '👟', 'shoe': '👟',
+    'camiseta': '👕', 'shirt': '👕',
+    'reloj': '⌚', 'watch': '⌚',
+    'mochila': '🎒', 'backpack': '🎒',
+    'silla': '🪑', 'chair': '🪑',
+    'licuadora': '🥤', 'blender': '🥤'
+  };
+  
+  for (const [clave, emoji] of Object.entries(emojis)) {
+    if (nombreLower.includes(clave)) return emoji;
+  }
+  
+  return '📦';
+}
