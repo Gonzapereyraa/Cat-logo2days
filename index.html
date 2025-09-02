@@ -249,6 +249,159 @@
       </form>
     </div>
   </div>
+  <!-- Modal de Plantillas -->
+<div id="templateModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="bg-white rounded-lg p-6 w-full max-w-4xl mx-4 max-h-[90vh] overflow-y-auto">
+    <div class="flex justify-between items-center mb-6">
+      <h2 class="text-lg md:text-xl font-bold text-gray-800">
+        <i class="fas fa-palette mr-2"></i>Elige y personaliza tu plantilla
+      </h2>
+      <button id="closeTemplateModal" class="text-gray-500 hover:text-gray-700">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+  <!-- Plantilla Clásica -->
+  <div class="template-option bg-white/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-300 hover:border-indigo-500 transition cursor-pointer" data-template="clasica">
+    <div class="bg-gradient-to-br from-indigo-900 to-purple-900 h-32 w-full rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+      <!-- Imagen de laptop para plantilla clásica -->
+      <img src="/img/plan1.png" 
+           alt="Laptop Clásica - Gonzapereyraa" 
+           class="w-full h-full object-cover rounded-lg opacity-90"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <!-- Fallback icon -->
+      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-indigo-900 to-purple-900" style="display:none;">
+        <i class="fas fa-laptop text-white text-3xl"></i>
+      </div>
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-indigo-900/50 to-transparent rounded-lg"></div>
+      <div class="absolute bottom-2 left-2 bg-white/90 text-indigo-900 px-2 py-1 rounded text-xs font-semibold">
+        clasica
+      </div>
+    </div>
+    <h3 class="text-xl font-semibold mb-2">Clásica</h3>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors" onclick="editarPlantilla('clasica')">Personalizar</button>
+  </div>
+  
+  <!-- Plantilla Moderna -->
+  <div class="template-option bg-white/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-300 hover:border-indigo-500 transition cursor-pointer" data-template="moderna">
+    <div class="bg-gradient-to-br from-gray-800 to-gray-900 h-32 w-full rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+      <!-- Imagen de smartphone moderno -->
+      <img src="img/plan2.png" 
+           alt="Smartphone Moderno - Gonzapereyraa" 
+           class="w-full h-full object-cover rounded-lg opacity-90"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <!-- Fallback icon -->
+      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-800 to-gray-900" style="display:none;">
+        <i class="fas fa-rocket text-green-400 text-3xl"></i>
+      </div>
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-gray-900/50 to-transparent rounded-lg"></div>
+      <div class="absolute bottom-2 left-2 bg-white/90 text-gray-900 px-2 py-1 rounded text-xs font-semibold">
+        Moderna
+      </div>
+    </div>
+    <h3 class="text-xl font-semibold mb-2">Moderna</h3>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors" onclick="editarPlantilla('moderna')">Personalizar</button>
+  </div>
+  
+  <!-- Plantilla Minimalista -->
+  <div class="template-option bg-white/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-300 hover:border-indigo-500 transition cursor-pointer" data-template="minimalista">
+    <div class="bg-gradient-to-br from-gray-100 to-gray-200 h-32 w-full rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+      <!-- Imagen de auriculares minimalistas -->
+      <img src="/img/plan3.png" 
+           alt="Auriculares Minimalistas - Gonzapereyraa" 
+           class="w-full h-full object-cover rounded-lg opacity-95"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <!-- Fallback icon -->
+      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-gray-100 to-gray-200" style="display:none;">
+        <i class="fas fa-circle text-gray-800 text-3xl"></i>
+      </div>
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-gray-200/40 to-transparent rounded-lg"></div>
+      <div class="absolute bottom-2 left-2 bg-white/90 text-gray-800 px-2 py-1 rounded text-xs font-semibold">
+        Dark
+      </div>
+    </div>
+    <h3 class="text-xl font-semibold mb-2">Minimalista</h3>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors" onclick="editarPlantilla('minimalista')">Personalizar</button>
+  </div>
+  
+  <!-- Plantilla Futurista -->
+  <div class="template-option bg-white/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-300 hover:border-indigo-500 transition cursor-pointer" data-template="futurista">
+    <div class="bg-gradient-to-br from-blue-900 to-purple-900 h-32 w-full rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+      <!-- Imagen de smartwatch futurista -->
+      <img src="/img/plan4.png"
+           alt="Smartwatch Futurista - Gonzapereyraa" 
+           class="w-full h-full object-cover rounded-lg opacity-90"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <!-- Fallback icon -->
+      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-blue-900 to-purple-900" style="display:none;">
+        <i class="fas fa-atom text-cyan-400 text-3xl"></i>
+      </div>
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent rounded-lg"></div>
+      <div class="absolute bottom-2 left-2 bg-white/90 text-purple-900 px-2 py-1 rounded text-xs font-semibold">
+        Futurista
+      </div>
+    </div>
+    <h3 class="text-xl font-semibold mb-2">Futurista</h3>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors" onclick="editarPlantilla('futurista')">Personalizar</button>
+  </div>
+  
+  <!-- Plantilla Gamer -->
+  <div class="template-option bg-white/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-300 hover:border-indigo-500 transition cursor-pointer" data-template="gamer">
+    <div class="bg-gradient-to-br from-pink-900 to-purple-900 h-32 w-full rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+      <!-- Imagen de setup gamer -->
+      <img src="/img/plan5.png" 
+           alt="Setup Gamer - Gonzapereyraa" 
+           class="w-full h-full object-cover rounded-lg opacity-90"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <!-- Fallback icon -->
+      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-pink-900 to-purple-900" style="display:none;">
+        <i class="fas fa-gamepad text-pink-400 text-3xl"></i>
+      </div>
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-purple-900/50 to-transparent rounded-lg"></div>
+      <div class="absolute bottom-2 left-2 bg-white/90 text-pink-900 px-2 py-1 rounded text-xs font-semibold">
+        Gamer
+      </div>
+    </div>
+    <h3 class="text-xl font-semibold mb-2">Gamer</h3>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors" onclick="editarPlantilla('gamer')">Personalizar</button>
+  </div>
+  
+  <!-- Plantilla Vintage -->
+  <div class="template-option bg-white/80 rounded-lg p-6 flex flex-col items-center text-center shadow-lg border-2 border-gray-300 hover:border-indigo-500 transition cursor-pointer" data-template="vintaje">
+    <div class="bg-gradient-to-br from-yellow-100 to-amber-200 h-32 w-full rounded-lg mb-4 flex items-center justify-center overflow-hidden relative">
+      <!-- Imagen de cámara vintage -->
+      <img src="/img/plan6.png"
+           alt="Cámara Vintage - Gonzapereyraa" 
+           class="w-full h-full object-cover rounded-lg opacity-95"
+           onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+      <!-- Fallback icon -->
+      <div class="absolute inset-0 flex items-center justify-center bg-gradient-to-br from-yellow-100 to-amber-200" style="display:none;">
+        <i class="fas fa-scroll text-amber-800 text-3xl"></i>
+      </div>
+      <!-- Overlay -->
+      <div class="absolute inset-0 bg-gradient-to-t from-amber-200/40 to-transparent rounded-lg"></div>
+      <div class="absolute bottom-2 left-2 bg-white/90 text-amber-800 px-2 py-1 rounded text-xs font-semibold">
+        Vintaje
+      </div>
+    </div>
+    <h3 class="text-xl font-semibold mb-2">Vintage</h3>
+    <button class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded transition-colors" onclick="editarPlantilla('vintaje')">Personalizar</button>
+  </div>
+</div>
+    
+    <div class="mt-6 text-center">
+      <button id="applyTemplate" class="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg">
+        <i class="fas fa-check mr-2"></i>Aplicar Plantilla
+      </button>
+    </div>
+  </div>
+</div>
 
 
 
