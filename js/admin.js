@@ -878,3 +878,42 @@ function addNewCategory() {
         showNotification(`Categoría "${trimmedName}" agregada`, 'success');
     }
 }
+
+// Funciones globales para productos
+window.editProductAdmin = function(id) {
+    const productos = getStoredProducts();
+    const product = productos.find(p => p.id === parseInt(id));
+    if (product) {
+        console.log(`✏️ Editando producto ID: ${id} - Gonzapereyraa - 2025-09-02 18:13:58`);
+        openProductModal(product);
+    }
+};
+
+window.deleteProductAdmin = function(id) {
+    const productos = getStoredProducts();
+    const product = productos.find(p => p.id === parseInt(id));
+    
+    if (product && confirm(`¿Estás seguro de que quieres eliminar "${product.nombre}"?`)) {
+        const productosFiltered = productos.filter(p => p.id !== parseInt(id));
+        saveProducts(productosFiltered);
+        
+        console.log(`🗑️ Producto eliminado: ${product.nombre} - Gonzapereyraa - 2025-09-02 18:13:58`);
+        showNotification('Producto eliminado correctamente', 'success');
+        
+        // Crear backup automático
+        crearBackupAutomatico();
+        
+        if (window.recargarProductos) {
+            setTimeout(() => {
+                window.recargarProductos();
+                setTimeout(() => {
+                    if (isEditMode) addEditableElements();
+                }, 200);
+            }, 500);
+        } else {
+            setTimeout(() => {
+                window.location.reload();
+            }, 1000);
+        }
+    }
+};
