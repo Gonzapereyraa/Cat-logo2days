@@ -1,0 +1,240 @@
+/* -------------------- Fondo general -------------------- */
+.gradient-bg {
+  background: #0d0d0d;
+  color: #e0e0e0;
+  font-family: 'Roboto', sans-serif;
+  scroll-behavior: smooth;
+}
+
+/* -------------------- Glass Cards con estilo tech -------------------- */
+.glass-card {
+  background: rgba(30,30,30,0.8);
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 12px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 15px 30px rgba(0,0,0,0.7);
+}
+
+/* -------------------- Animaciones suaves -------------------- */
+.fade-in {
+  animation: fadeInTech 0.7s ease-in-out both;
+}
+
+@keyframes fadeInTech {
+  from { opacity: 0; transform: translateY(15px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------- Header -------------------- */
+header {
+  flex-direction: row;
+  justify-content: space-between;
+  background: #111111;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  border: 1px solid rgba(255,255,255,0.05);
+}
+
+header h1 {
+  font-size: 2.2rem;
+  color: #00ffe0;
+}
+
+header i.fas.fa-store {
+  color: #ff00ff;
+  font-size: 2rem;
+}
+
+header button, header a {
+  font-weight: 500;
+  border-radius: 8px;
+  transition: all 0.3s ease;
+}
+
+#viewCatalogBtn {
+  background: #ff6600;
+  color: #111;
+}
+
+#viewCatalogBtn:hover {
+  background: #ff4500;
+}
+
+a[target="_blank"] {
+  background: #00ffe0;
+  color: #111;
+}
+
+a[target="_blank"]:hover {
+  background: #00ccaa;
+}
+
+#cartButton {
+  background: #222;
+  color: #00ffe0;
+}
+
+#cartButton:hover {
+  background: #333;
+  transform: scale(1.1);
+}
+
+/* -------------------- Hero Section -------------------- */
+section#heroTitle {
+  color: #ff00ff;
+  font-size: 3rem;
+}
+
+section#heroSubtitle {
+  color: #a0a0a0;
+  font-size: 1.1rem;
+}
+
+#heroCatalogBtn {
+  background: linear-gradient(90deg,#ff6600,#ff00ff);
+  color: #fff;
+  border-radius: 999px;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  box-shadow: 0 6px 15px rgba(255,0,255,0.3);
+}
+
+#heroCatalogBtn:hover {
+  transform: translateY(-3px) scale(1.02);
+}
+
+/* -------------------- Inputs y Selects -------------------- */
+input, select {
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 10px;
+  padding: 0.5rem 1rem;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #ff00ff;
+  box-shadow: 0 0 8px #ff00ff50;
+}
+
+/* -------------------- Productos -------------------- */
+#productsContainer .glass-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#productsContainer img {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+#productsContainer .glass-card:hover img {
+  transform: scale(1.05);
+}
+
+#productsContainer h3 {
+  color: #00ffe0;
+  font-weight: 700;
+}
+
+#productsContainer p {
+  color: #bbb;
+}
+
+#productsContainer span.bg-indigo-600 {
+  background: #ff6600;
+}
+
+/* -------------------- Banner Promocional -------------------- */
+#promoBanner {
+  background: #ff00ff;
+  color: #111;
+  padding: 1rem;
+  border-radius: 10px;
+  text-align: center;
+  font-weight: 600;
+  box-shadow: 0 6px 20px rgba(255,0,255,0.3);
+}
+
+/* -------------------- Modal Carrito -------------------- */
+#cartModal {
+  backdrop-filter: blur(6px);
+}
+
+#cartModal .glass-card {
+  background: #111;
+  color: #fff;
+  border-radius: 16px;
+  border: 1px solid #222;
+}
+
+#cartModal #cartTotal {
+  color: #ff6600;
+  font-weight: 700;
+}
+
+#clearCart {
+  background: #ff00ff;
+  color: #111;
+}
+
+#clearCart:hover {
+  background: #cc00cc;
+}
+
+#checkout {
+  background: #00ffe0;
+  color: #111;
+}
+
+#checkout:hover {
+  background: #00ccaa;
+}
+
+/* -------------------- Footer -------------------- */
+footer {
+  background: #111;
+  color: #888;
+  border-top: 1px solid #222;
+  padding: 1rem 0;
+}
+
+footer a {
+  color: #ff00ff;
+  transition: color 0.3s ease;
+}
+
+footer a:hover {
+  color: #00ffe0;
+}
+
+/* -------------------- Scrollbar -------------------- */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #333;
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}

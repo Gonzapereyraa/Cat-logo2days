@@ -1,0 +1,222 @@
+/* -------------------- Fondos y tarjetas -------------------- */
+body {
+    background-color: #f9f9f9; /* fondo muy claro */
+    color: #000; /* texto negro */
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 1rem;
+}
+
+/* Tarjetas */
+.glass-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1rem;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    border: 1px solid #ddd;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.glass-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+}
+
+/* -------------------- Header -------------------- */
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background-color: #ffffff;
+    border-bottom: 1px solid #ddd;
+}
+
+header h1 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #000; /* negro */
+}
+
+header i {
+    color: #000; /* iconos en negro */
+    margin-right: 0.5rem;
+}
+
+header button, header a {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 500;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.3s, transform 0.2s;
+}
+
+header button:hover, header a:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* -------------------- Hero Section -------------------- */
+section {
+    text-align: center;
+    padding: 2rem;
+    margin-bottom: 2rem;
+}
+
+#heroTitle {
+    font-size: 2.5rem;
+    font-weight: bold;
+    margin-bottom: 1rem;
+    color: #000; /* negro */
+}
+
+#heroSubtitle {
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    color: #000; /* negro */
+}
+
+#heroCatalogBtn {
+    padding: 0.7rem 1.5rem;
+    border-radius: 6px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: #fff;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.3s, transform 0.2s;
+}
+
+#heroCatalogBtn:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* -------------------- Filtros -------------------- */
+#filtersContainer {
+    background-color: #ffffff;
+    border-radius: 10px;
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+}
+
+#filtersContainer input,
+#filtersContainer select {
+    width: 100%;
+    padding: 0.5rem 1rem;
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    background-color: #fff;
+    color: #000; /* letras negras */
+}
+
+#filtersContainer input:focus,
+#filtersContainer select:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0,123,255,0.3);
+}
+
+/* -------------------- Productos -------------------- */
+#productsContainer {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+#productsContainer .product-card {
+    background-color: #ffffff;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid #ddd;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+#productsContainer .product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 6px 15px rgba(0,0,0,0.1);
+}
+
+#productsContainer img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+    border-bottom: 1px solid #ddd;
+}
+
+#productsContainer h3,
+#productsContainer p,
+#productsContainer span {
+    color: #000; /* texto negro */
+}
+
+#productsContainer h3 {
+    font-size: 1.2rem;
+    font-weight: bold;
+    margin-bottom: 0.5rem;
+}
+
+#productsContainer p {
+    font-size: 0.95rem;
+    margin-bottom: 1rem;
+}
+
+#productsContainer button {
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    border: 1px solid #007bff;
+    background-color: #007bff;
+    color: #fff;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.2s;
+}
+
+#productsContainer button:hover {
+    background-color: #0056b3;
+    transform: translateY(-2px);
+}
+
+/* -------------------- Footer -------------------- */
+footer {
+    text-align: center;
+    padding: 1.5rem 0;
+    background-color: #ffffff;
+    border-top: 1px solid #ddd;
+    color: #000; /* letras negras */
+}
+
+footer a {
+    margin: 0 0.5rem;
+    color: #007bff;
+    text-decoration: none;
+    transition: color 0.3s;
+}
+
+footer a:hover {
+    color: #0056b3;
+}
+
+/* -------------------- Responsivo -------------------- */
+@media (max-width: 600px) {
+    #heroTitle {
+        font-size: 1.8rem;
+    }
+
+    #heroSubtitle {
+        font-size: 1rem;
+    }
+}

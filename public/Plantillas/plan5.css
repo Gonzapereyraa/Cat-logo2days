@@ -1,0 +1,287 @@
+/* -------------------- Fondo animado con partículas -------------------- */
+body {
+  margin: 0;
+  padding: 0;
+  font-family: 'Orbitron', sans-serif;
+  overflow-x: hidden;
+  background: #0d0d0d;
+  color: #e0e0e0;
+  position: relative;
+}
+
+.gradient-bg {
+  background: linear-gradient(-45deg, #0d0d0d, #1a1a1a, #0f0f0f, #111111);
+  background-size: 400% 400%;
+  animation: gradientBG 15s ease infinite;
+  position: relative;
+  z-index: 1;
+}
+
+@keyframes gradientBG {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* -------------------- Partículas flotantes -------------------- */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background-image: radial-gradient(#00ffe0 1px, transparent 1px),
+                    radial-gradient(#ff00ff 1px, transparent 1px);
+  background-size: 50px 50px;
+  background-position: 0 0, 25px 25px;
+  animation: moveParticles 20s linear infinite;
+  pointer-events: none;
+  z-index: 0;
+  opacity: 0.2;
+}
+
+@keyframes moveParticles {
+  0% {background-position: 0 0, 25px 25px;}
+  100% {background-position: 100px 100px, 125px 125px;}
+}
+
+/* -------------------- Glass Cards futuristas -------------------- */
+.glass-card {
+  background: rgba(20, 20, 20, 0.7);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 16px;
+  box-shadow: 0 0 15px rgba(0,255,255,0.2), 0 0 25px rgba(255,0,255,0.2);
+  transition: all 0.4s ease;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
+}
+
+.glass-card:hover {
+  transform: translateY(-8px) scale(1.03);
+  box-shadow: 0 0 25px rgba(0,255,255,0.4), 0 0 35px rgba(255,0,255,0.4);
+}
+
+/* -------------------- Animaciones -------------------- */
+.fade-in {
+  animation: fadeInTech 0.7s ease-in-out both;
+}
+
+@keyframes fadeInTech {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* -------------------- Header -------------------- */
+header {
+  flex-direction: row;
+  justify-content: space-between;
+  background: #111;
+  padding: 1rem 2rem;
+  border-radius: 12px;
+  border: 1px solid #222;
+  position: relative;
+  z-index: 2;
+}
+
+header h1 {
+  font-size: 2.2rem;
+  color: #00ffea;
+  text-shadow: 0 0 5px #00ffea, 0 0 10px #00ffea;
+}
+
+header i.fas.fa-store {
+  color: #ff00ff;
+  font-size: 2rem;
+  text-shadow: 0 0 8px #ff00ff;
+}
+
+header button, header a {
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 0.5rem 1.5rem;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: linear-gradient(90deg, #ff00ff, #00ffe0);
+  color: #111;
+  border: none;
+  box-shadow: 0 0 8px #ff00ff50, 0 0 12px #00ffe050;
+  transition: all 0.4s ease;
+}
+
+header button:hover, header a:hover {
+  transform: translateY(-2px) scale(1.05);
+  box-shadow: 0 0 15px #ff00ff, 0 0 20px #00ffe0;
+}
+
+#cartButton {
+  background: rgba(30,30,30,0.8);
+  color: #00ffe0;
+  box-shadow: 0 0 5px #00ffe0, 0 0 10px #00ffe0;
+}
+
+#cartButton:hover {
+  transform: scale(1.2) rotate(-5deg);
+  box-shadow: 0 0 15px #00ffe0, 0 0 25px #ff00ff;
+}
+
+/* -------------------- Hero Section -------------------- */
+#heroTitle {
+  color: #ff00ff;
+  font-size: 3rem;
+  text-shadow: 0 0 8px #ff00ff, 0 0 15px #ff00ff50;
+}
+
+#heroSubtitle {
+  color: #a0a0a0;
+  font-size: 1.1rem;
+}
+
+#heroCatalogBtn {
+  background: linear-gradient(45deg, #ff00ff, #00ffe0, #ff6600);
+  background-size: 300% 300%;
+  animation: gradientBtn 6s ease infinite;
+  color: #111;
+  border-radius: 999px;
+  padding: 0.8rem 2rem;
+  font-size: 1rem;
+  font-weight: 700;
+  box-shadow: 0 0 10px #ff00ff50, 0 0 15px #00ffe050;
+  transition: all 0.3s ease;
+}
+
+#heroCatalogBtn:hover {
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 0 20px #ff00ff, 0 0 25px #00ffe0;
+}
+
+@keyframes gradientBtn {
+  0% {background-position: 0% 50%;}
+  50% {background-position: 100% 50%;}
+  100% {background-position: 0% 50%;}
+}
+
+/* -------------------- Inputs y Selects -------------------- */
+input, select {
+  background: #1a1a1a;
+  color: #fff;
+  border: 1px solid #333;
+  border-radius: 12px;
+  padding: 0.6rem 1rem;
+  box-shadow: 0 0 5px rgba(0,255,255,0.3);
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #ff00ff;
+  box-shadow: 0 0 12px #ff00ff50, 0 0 18px #00ffe050;
+}
+
+/* -------------------- Productos -------------------- */
+#productsContainer .glass-card {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#productsContainer img {
+  height: 200px;
+  object-fit: cover;
+  transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+#productsContainer .glass-card:hover img {
+  transform: scale(1.1);
+  filter: brightness(1.3) contrast(1.1);
+}
+
+#productsContainer h3 {
+  color: #00ffe0;
+  font-weight: 700;
+  text-shadow: 0 0 5px #00ffe0;
+}
+
+#productsContainer p {
+  color: #aaa;
+}
+
+#productsContainer span.bg-indigo-600 {
+  background: #ff6600;
+  color: #111;
+}
+
+/* -------------------- Modal Carrito -------------------- */
+#cartModal {
+  backdrop-filter: blur(8px);
+}
+
+#cartModal .glass-card {
+  background: rgba(20,20,20,0.9);
+  color: #fff;
+  border-radius: 16px;
+  border: 1px solid #333;
+  box-shadow: 0 0 20px rgba(255,0,255,0.3), 0 0 25px rgba(0,255,255,0.3);
+}
+
+#cartModal #cartTotal {
+  color: #ff00ff;
+  font-weight: 700;
+}
+
+#clearCart {
+  background: linear-gradient(90deg,#ff00ff,#ff6600);
+  color: #111;
+  box-shadow: 0 0 8px #ff00ff,0 0 12px #ff6600;
+}
+
+#clearCart:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #ff00ff,0 0 25px #ff6600;
+}
+
+#checkout {
+  background: linear-gradient(90deg,#00ffe0,#00ccaa);
+  color: #111;
+  box-shadow: 0 0 8px #00ffe0,0 0 12px #00ccaa;
+}
+
+#checkout:hover {
+  transform: scale(1.05);
+  box-shadow: 0 0 20px #00ffe0,0 0 25px #00ccaa;
+}
+
+/* -------------------- Footer -------------------- */
+footer {
+  background: #111;
+  color: #888;
+  border-top: 1px solid #222;
+  padding: 1rem 0;
+}
+
+footer a {
+  color: #ff00ff;
+  transition: color 0.3s ease;
+  text-shadow: 0 0 5px #ff00ff;
+}
+
+footer a:hover {
+  color: #00ffe0;
+  text-shadow: 0 0 10px #00ffe0;
+}
+
+/* -------------------- Scrollbar -------------------- */
+::-webkit-scrollbar {
+  width: 10px;
+}
+
+::-webkit-scrollbar-track {
+  background: #111;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #222;
+  border-radius: 5px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #555;
+}
