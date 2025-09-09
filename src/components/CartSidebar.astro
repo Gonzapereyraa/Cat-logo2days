@@ -1,0 +1,181 @@
+---
+// Este componente maneja el modal del carrito de compras
+---
+
+<!-- Cart Modal -->
+<div id="cartModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 hidden">
+  <div class="glass-card p-6 rounded-lg max-w-md w-full mx-4 max-h-[80vh] overflow-y-auto fade-in">
+    <div class="flex justify-between items-center mb-4">
+      <h2 class="text-xl md:text-2xl font-bold text-white">
+        <i class="fas fa-shopping-cart mr-2"></i>Tu Carrito
+      </h2>
+      <button id="closeCart" class="p-2 hover:bg-white hover:bg-opacity-20 rounded-full text-white transition-colors">
+        <i class="fas fa-times text-xl"></i>
+      </button>
+    </div>
+    
+    <!-- Cart Items Container -->
+    <div id="cartItems" class="space-y-4 mb-4">
+      <!-- Los items del carrito se cargan dinámicamente -->
+    </div>
+    
+    <!-- Cart Summary -->
+    <div class="border-t border-white border-opacity-30 pt-4">
+      <div class="flex justify-between items-center mb-4">
+        <span class="font-semibold text-white">Total:</span>
+        <span id="cartTotal" class="font-bold text-xl text-white">$0.00</span>
+      </div>
+      
+      <div class="flex space-x-2">
+        <button 
+          id="clearCart" 
+          class="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition flex-1"
+        >
+          <i class="fas fa-trash mr-2"></i>Vaciar
+        </button>
+        <button 
+          id="checkout" 
+          class="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition flex-1"
+        >
+          <i class="fas fa-credit-card mr-2"></i>Pagar
+        </button>
+      </div>
+    </div>
+    
+    <!-- Empty Cart State -->
+    <div id="emptyCartState" class="text-center py-8 text-gray-400 hidden">
+      <i class="fas fa-shopping-cart text-4xl mb-4"></i>
+      <p class="text-lg mb-2">Tu carrito está vacío</p>
+      <p class="text-sm">Añade algunos productos para comenzar</p>
+      <button 
+        id="continueShopping"
+        class="mt-4 px-6 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg transition-colors"
+      >
+        Seguir Comprando
+      </button>
+    </div>
+  </div>
+</div>
+
+<style>
+  .glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+  }
+  
+  .fade-in {
+    animation: fadeIn 0.3s ease-out;
+  }
+  
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+      transform: scale(0.9);
+    }
+    to {
+      opacity: 1;
+      transform: scale(1);
+    }
+  }
+  
+  /* Custom scrollbar for cart items */
+  #cartItems::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  #cartItems::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+  }
+  
+  #cartItems::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+  }
+  
+  #cartItems::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+  }
+  
+  /* Quantity button animations */
+  .quantity-btn {
+    transition: all 0.2s;
+  }
+  
+  .quantity-btn:hover {
+    transform: scale(1.1);
+  }
+  
+  .quantity-btn:active {
+    transform: scale(0.95);
+  }
+  
+  /* Cart item animations */
+  .cart-item {
+    animation: slideInRight 0.3s ease-out;
+  }
+  
+  @keyframes slideInRight {
+    from {
+      opacity: 0;
+      transform: translateX(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+  
+  /* Remove item animation */
+  .cart-item.removing {
+    animation: slideOutRight 0.3s ease-in forwards;
+  }
+  
+  @keyframes slideOutRight {
+    to {
+      opacity: 0;
+      transform: translateX(20px);
+      height: 0;
+      padding: 0;
+      margin: 0;
+    }
+  }
+</style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Continue shopping button
+    const continueShoppingBtn = document.getElementById('continueShopping');
+    if (continueShoppingBtn) {
+      continueShoppingBtn.addEventListener('click', () => {
+        document.getElementById('cartModal').classList.add('hidden');
+        
+        // Scroll to catalog section
+        const catalogView = document.getElementById('catalogView');
+        if (catalogView) {
+          catalogView.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    }
+    
+    // Add keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      const cartModal = document.getElementById('cartModal');
+      if (!cartModal.classList.contains('hidden')) {
+        // Navigate with arrow keys between quantity buttons
+        if (e.key === 'ArrowUp' || e.key === 'ArrowDown') {
+          e.preventDefault();
+          const buttons = cartModal.querySelectorAll('.quantity-btn');
+          const currentIndex = Array.from(buttons).findIndex(btn => btn === document.activeElement);
+          
+          if (e.key === 'ArrowDown' && currentIndex < buttons.length - 1) {
+            buttons[currentIndex + 1].focus();
+          } else if (e.key === 'ArrowUp' && currentIndex > 0) {
+            buttons[currentIndex - 1].focus();
+          }
+        }
+      }
+    });
+  });
+</script>

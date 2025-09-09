@@ -1,0 +1,65 @@
+---
+import { categories } from '../data/categories.js';
+---
+
+<section class="mb-8">
+  <div class="text-center mb-8">
+    <h2 class="text-2xl md:text-3xl font-bold text-white mb-4">Explora por Categorías</h2>
+    <p class="text-gray-300">Encuentra exactamente lo que buscas</p>
+  </div>
+  
+  <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6">
+    {categories.map((category) => (
+      <div 
+        class="category-card glass-card rounded-xl p-4 md:p-6 text-center hover:scale-105 transition-all duration-300 cursor-pointer group"
+        data-category={category.nombre}
+        key={category.id}
+      >
+        <div class={`w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full bg-gradient-to-br ${category.color} flex items-center justify-center group-hover:scale-110 transition-transform duration-300`}>
+          <i class={`${category.icono} text-2xl md:text-3xl text-white`}></i>
+        </div>
+        <h3 class="font-semibold text-sm md:text-base text-white mb-2">{category.nombre}</h3>
+        <p class="text-xs md:text-sm text-gray-300 opacity-0 group-hover:opacity-100 transition-opacity duration-300">
+          {category.descripcion}
+        </p>
+      </div>
+    ))}
+  </div>
+</section>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Manejar click en categorías
+    document.querySelectorAll('.category-card').forEach(card => {
+      card.addEventListener('click', () => {
+        const categoryName = card.dataset.category;
+        const categoryFilter = document.getElementById('categoryFilter');
+        
+        if (categoryFilter) {
+          categoryFilter.value = categoryName;
+          categoryFilter.dispatchEvent(new Event('change'));
+        }
+        
+        // Scroll al catálogo
+        const catalogView = document.getElementById('catalogView');
+        if (catalogView) {
+          catalogView.scrollIntoView({ behavior: 'smooth' });
+        }
+      });
+    });
+  });
+</script>
+
+<style>
+  .category-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+  }
+  
+  .category-card:hover {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+  }
+</style>
