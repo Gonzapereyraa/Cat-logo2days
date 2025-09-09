@@ -7,6 +7,88 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <link id="plantillaCSS" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Estilos adicionales para filtros avanzados -->
+  <style>
+    /* Transiciones suaves */
+    .filter-group {
+      transition: all 0.3s ease;
+    }
+    
+    /* Estilo para los botones de talla */
+    .size-filter-btn.bg-indigo-600 {
+      background-color: #4F46E5 !important;
+      color: white !important;
+      border-color: #4F46E5 !important;
+    }
+    
+    /* Estilo para los botones de color seleccionados */
+    .color-filter-btn.ring-2 {
+      box-shadow: 0 0 0 2px #4F46E5;
+    }
+    
+    /* Animaciones de hover para las tarjetas de productos */
+    .glass-card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    }
+    
+    /* Estilo para el texto truncado */
+    .line-clamp-2 {
+      overflow: hidden;
+      display: -webkit-box;
+      -webkit-box-orient: vertical;
+      -webkit-line-clamp: 2;
+    }
+    
+    /* Sidebar responsive */
+    @media (max-width: 1024px) {
+      #filtersContent {
+        transition: max-height 0.3s ease-in-out;
+        overflow: hidden;
+      }
+      
+      #filtersContent.hidden {
+        max-height: 0;
+      }
+      
+      #filtersContent:not(.hidden) {
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+    }
+    
+    /* Estilo para los checkboxes y radio buttons */
+    input[type="checkbox"], input[type="radio"] {
+      accent-color: #4F46E5;
+    }
+    
+    /* Estilo para los inputs de precio */
+    input[type="number"] {
+      -moz-appearance: textfield;
+    }
+    
+    input[type="number"]::-webkit-outer-spin-button,
+    input[type="number"]::-webkit-inner-spin-button {
+      -webkit-appearance: none;
+      margin: 0;
+    }
+    
+    /* Animación para las estrellas de rating */
+    .fa-star, .fa-star-half-alt {
+      transition: color 0.2s ease;
+    }
+    
+    /* Efecto de aparición gradual */
+    .fade-in {
+      animation: fadeIn 0.5s ease-in;
+    }
+    
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(20px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+  </style>
 </head>
 <body class="min-h-screen gradient-bg text-gray-100 flex flex-col">
   
@@ -422,8 +504,90 @@
     </div>
   </footer>
 
-  <!-- Cargar el archivo JavaScript -->
+  <!-- Cargar archivos JavaScript -->
+  <script src="js/filters.js"></script>
   <script src="js/catalog.js"></script>
   <script src="js/admin.js"></script>
+  <script src="js/search.js"></script>
+  <script src="js/wishlist.js"></script>
+  <script src="js/compare.js"></script>
+  <script src="js/reviews.js"></script>
+  
+  <!-- Inicialización de sistemas avanzados -->
+  <script>
+    // Inicializar sistemas avanzados cuando el DOM esté listo
+    document.addEventListener('DOMContentLoaded', function() {
+      // Esperar a que se cargue el catálogo principal
+      setTimeout(() => {
+        console.log('🚀 Inicializando sistemas avanzados de UX/UI');
+        
+        try {
+          // Inicializar búsqueda avanzada
+          if (typeof inicializarBusquedaAvanzada === 'function') {
+            inicializarBusquedaAvanzada();
+          }
+          
+          // Inicializar sistema de favoritos
+          if (typeof inicializarWishlist === 'function') {
+            inicializarWishlist();
+          }
+          
+          // Inicializar sistema de comparación
+          if (typeof inicializarComparacion === 'function') {
+            inicializarComparacion();
+          }
+          
+          // Inicializar sistema de reseñas
+          if (typeof inicializarReviews === 'function') {
+            inicializarReviews();
+          }
+          
+          console.log('✅ Todos los sistemas avanzados inicializados correctamente');
+          
+          // Mostrar notificación de bienvenida (una sola vez)
+          const hasSeenWelcome = localStorage.getItem('hasSeenAdvancedWelcome');
+          if (!hasSeenWelcome) {
+            setTimeout(() => {
+              mostrarNotificacionBienvenida();
+              localStorage.setItem('hasSeenAdvancedWelcome', 'true');
+            }, 2000);
+          }
+          
+        } catch (error) {
+          console.error('❌ Error al inicializar sistemas avanzados:', error);
+        }
+      }, 500);
+    });
+    
+    // Función para mostrar notificación de bienvenida
+    function mostrarNotificacionBienvenida() {
+      const notification = document.createElement('div');
+      notification.className = 'fixed top-4 left-1/2 transform -translate-x-1/2 bg-gradient-to-r from-indigo-600 to-purple-600 text-white px-6 py-4 rounded-lg shadow-xl z-50 max-w-md mx-4 animate-bounce';
+      
+      notification.innerHTML = `
+        <div class="flex items-center space-x-3">
+          <i class="fas fa-sparkles text-yellow-300 text-xl"></i>
+          <div class="flex-1">
+            <div class="font-bold">¡Nuevas Funciones Disponibles!</div>
+            <div class="text-sm opacity-90">Favoritos ❤️ • Comparar ⚖️ • Reseñas ⭐</div>
+          </div>
+          <button onclick="this.parentElement.parentElement.remove()" 
+                  class="p-1 hover:bg-white hover:bg-opacity-20 rounded">
+            <i class="fas fa-times"></i>
+          </button>
+        </div>
+      `;
+      
+      document.body.appendChild(notification);
+      
+      // Auto-remover después de 8 segundos
+      setTimeout(() => {
+        if (notification.parentElement) {
+          notification.style.transform = 'translateX(-50%) translateY(-100%)';
+          setTimeout(() => notification.remove(), 300);
+        }
+      }, 8000);
+    }
+  </script>
 </body>
 </html>

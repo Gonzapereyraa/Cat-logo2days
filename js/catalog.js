@@ -204,16 +204,26 @@ function cargarProductosDemo(config) {
       precio: 599.99,
       categoria: "Electrónicos",
       imagen: "https://images.unsplash.com/photo-1598327105666-5b89351aff97?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: true
+      oferta: true,
+      marca: "Samsung",
+      color: "#000000",
+      rating: 4.5,
+      sizes: [],
+      tags: ["smartphone", "tecnología", "cámara"]
     },
     {
       id: 2,
       nombre: "Zapatillas Running Pro",
       descripcion: "Zapatillas para correr con máxima amortiguación y estabilidad para deportistas.",
       precio: 129.99,
-      categoria: "Deportes",
+      categoria: "Zapatillas",
       imagen: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: false
+      oferta: false,
+      marca: "Nike",
+      color: "#ff0000",
+      rating: 4.2,
+      sizes: ["38", "39", "40", "41", "42", "43", "44"],
+      tags: ["running", "deporte", "comodidad"]
     },
     {
       id: 3,
@@ -222,16 +232,26 @@ function cargarProductosDemo(config) {
       precio: 89.99,
       categoria: "Hogar",
       imagen: "https://images.unsplash.com/photo-1570222094114-d054a817e56b?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: true
+      oferta: true,
+      marca: "Philips",
+      color: "#ffffff",
+      rating: 4.0,
+      sizes: [],
+      tags: ["cocina", "licuadora", "hogar"]
     },
     {
       id: 4,
       nombre: "Camiseta Premium",
       descripcion: "Camiseta de algodón 100% con diseño exclusivo y corte moderno.",
       precio: 29.99,
-      categoria: "Ropa",
+      categoria: "Remeras",
       imagen: "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: false
+      oferta: false,
+      marca: "Adidas",
+      color: "#0000ff",
+      rating: 4.3,
+      sizes: ["S", "M", "L", "XL", "XXL"],
+      tags: ["algodón", "casual", "premium"]
     },
     {
       id: 5,
@@ -240,7 +260,12 @@ function cargarProductosDemo(config) {
       precio: 149.99,
       categoria: "Electrónicos",
       imagen: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: true
+      oferta: true,
+      marca: "Sony",
+      color: "#000000",
+      rating: 4.7,
+      sizes: [],
+      tags: ["audio", "inalámbrico", "cancelación ruido"]
     },
     {
       id: 6,
@@ -249,7 +274,12 @@ function cargarProductosDemo(config) {
       precio: 59.99,
       categoria: "Accesorios",
       imagen: "https://images.unsplash.com/photo-1553062407-98eeb64c6a62?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: false
+      oferta: false,
+      marca: "North Face",
+      color: "#008000",
+      rating: 4.1,
+      sizes: [],
+      tags: ["mochila", "impermeable", "laptop"]
     },
     {
       id: 7,
@@ -258,7 +288,12 @@ function cargarProductosDemo(config) {
       precio: 199.99,
       categoria: "Electrónicos",
       imagen: "https://images.unsplash.com/photo-1579586337278-3befd40fd17a?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: true
+      oferta: true,
+      marca: "Apple",
+      color: "#c0c0c0",
+      rating: 4.6,
+      sizes: [],
+      tags: ["smartwatch", "salud", "GPS"]
     },
     {
       id: 8,
@@ -267,7 +302,40 @@ function cargarProductosDemo(config) {
       precio: 249.99,
       categoria: "Hogar",
       imagen: "https://images.unsplash.com/photo-1580480055273-228ff5388ef8?ixlib=rb-4.0.3&auto=format&fit=crop&w=600&q=80",
-      oferta: false
+      oferta: false,
+      marca: "Herman Miller",
+      color: "#808080",
+      rating: 4.4,
+      sizes: [],
+      tags: ["oficina", "ergonómica", "confort"]
+    },
+    {
+      id: 9,
+      nombre: "Pantalones Cargo",
+      descripcion: "Pantalones resistentes con múltiples bolsillos, ideales para actividades al aire libre.",
+      precio: 79.99,
+      categoria: "Pantalones",
+      imagen: "https://via.placeholder.com/600x400/8B4513/FFFFFF?text=Pantalones+Cargo",
+      oferta: false,
+      marca: "Puma",
+      color: "#8B4513",
+      rating: 3.9,
+      sizes: ["S", "M", "L", "XL"],
+      tags: ["cargo", "resistente", "outdoor"]
+    },
+    {
+      id: 10,
+      nombre: "Zapatillas Urbanas",
+      descripcion: "Zapatillas casuales perfectas para uso diario con diseño moderno y cómodo.",
+      precio: 89.99,
+      categoria: "Zapatillas",
+      imagen: "https://via.placeholder.com/600x400/FFFFFF/000000?text=Zapatillas+Urbanas",
+      oferta: true,
+      marca: "Adidas",
+      color: "#ffffff",
+      rating: 4.0,
+      sizes: ["36", "37", "38", "39", "40", "41", "42"],
+      tags: ["casual", "urbano", "cómodo"]
     }
   ];
   
@@ -304,17 +372,23 @@ function procesarProductos(productos, config) {
   // Configurar UI según configuración
   configurarInterfazUsuario(config);
   
-  // Actualizar filtros de categorías
-  actualizarFiltrosCategorias(productos);
-  
-  // Mostrar productos destacados (si existen)
-  mostrarProductosDestacados(productos, config);
-  
-  // Mostrar productos regulares
-  mostrarProductos(productos, config);
-  
-  // Configurar filtros de búsqueda
-  configurarFiltros(productos, config);
+  // Inicializar sistema de filtros avanzado
+  if (typeof inicializarFiltros === 'function') {
+    inicializarFiltros(productos);
+  } else {
+    // Fallback al sistema antiguo si el nuevo no está disponible
+    // Actualizar filtros de categorías
+    actualizarFiltrosCategorias(productos);
+    
+    // Mostrar productos destacados (si existen)
+    mostrarProductosDestacados(productos, config);
+    
+    // Mostrar productos regulares
+    mostrarProductos(productos, config);
+    
+    // Configurar filtros de búsqueda
+    configurarFiltros(productos, config);
+  }
   
   console.log("✅ Productos procesados exitosamente");
 }
@@ -448,34 +522,135 @@ function mostrarProductos(productos, config) {
  */
 function crearTarjetaProducto(producto, config, esDestacado = false) {
   const card = document.createElement('div');
-  card.className = `relative glass-card rounded-lg overflow-hidden shadow-lg hover:scale-105 hover:shadow-xl transition product-card`;
+  card.className = `relative glass-card rounded-lg overflow-hidden shadow-lg hover:scale-105 hover:shadow-xl transition product-card group`;
   card.dataset.id = producto.id;
   card.dataset.categoria = producto.categoria;
   card.dataset.precio = producto.precio;
   
   const imagenFallback = generarImagenFallback(producto.nombre);
+  const totalReviews = producto.totalReviews || 0;
+  const estrellas = generarEstrellasRating(producto.rating || 0);
   
   card.innerHTML = `
     ${producto.oferta && config.showOfferBadge ? '<span class="absolute top-2 left-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full z-10">Oferta</span>' : ''}
     ${esDestacado ? '<span class="absolute top-2 right-2 bg-yellow-500 text-yellow-900 text-xs px-2 py-1 rounded-full z-10 font-bold">⭐ Destacado</span>' : ''}
-    <img src="${producto.imagen}" alt="${producto.nombre}" class="w-full h-48 object-cover" 
-         onerror="this.src='${imagenFallback}';">
+    
+    <!-- Imagen del producto con overlay de acciones -->
+    <div class="relative overflow-hidden">
+      <img src="${producto.imagen}" alt="${producto.nombre}" class="w-full h-48 object-cover transition-transform duration-300 group-hover:scale-110" 
+           onerror="this.src='${imagenFallback}';">
+      
+      <!-- Overlay con botones de acción -->
+      <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-all duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
+        <div class="flex space-x-2">
+          <button onclick="toggleFavorito(${producto.id})" 
+                  class="p-2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full transition transform hover:scale-110"
+                  title="Agregar a favoritos">
+            <i class="fas fa-heart text-white"></i>
+          </button>
+          <button onclick="toggleComparacion(${producto.id})" 
+                  class="p-2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full transition transform hover:scale-110"
+                  title="Comparar producto">
+            <i class="fas fa-balance-scale text-white"></i>
+          </button>
+          <button onclick="verProducto(${producto.id})" 
+                  class="p-2 bg-white bg-opacity-20 hover:bg-opacity-40 rounded-full transition transform hover:scale-110"
+                  title="Ver detalles y reseñas">
+            <i class="fas fa-eye text-white"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+    
     <div class="p-4">
       <div class="flex justify-between items-start mb-2">
         <h3 class="text-lg font-bold line-clamp-2 flex-1">${producto.nombre}</h3>
         ${config.showCategoryTags ? `<span class="bg-indigo-600 text-white px-2 py-1 rounded text-xs whitespace-nowrap ml-2">${producto.categoria}</span>` : ''}
       </div>
+      
+      <!-- Rating y reseñas clickeable -->
+      <div class="flex items-center justify-between mb-2">
+        <span class="text-sm text-indigo-400 font-medium">${producto.marca || 'Sin marca'}</span>
+        <div class="flex items-center cursor-pointer hover:text-yellow-300 transition" 
+             onclick="verProducto(${producto.id})" 
+             title="Ver reseñas">
+          ${estrellas}
+          <span class="text-xs text-gray-400 ml-1">(${totalReviews > 0 ? totalReviews : 'Sin reseñas'})</span>
+        </div>
+      </div>
+      
       <p class="text-sm text-gray-300 mb-3 line-clamp-2">${producto.descripcion}</p>
+      
       <div class="flex justify-between items-center">
         <span class="font-bold text-indigo-400 text-lg">$${Number(producto.precio).toFixed(2)}</span>
-        <button class="add-to-cart px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition" data-id="${producto.id}">
-          <i class="fas fa-cart-plus mr-1"></i>Agregar
-        </button>
+        <div class="flex space-x-2">
+          <button onclick="verProducto(${producto.id})" 
+                  class="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white text-sm rounded-lg transition"
+                  title="Ver detalles">
+            <i class="fas fa-info-circle mr-1"></i>Ver
+          </button>
+          <button class="add-to-cart px-3 py-1 bg-indigo-600 text-white text-sm rounded-lg hover:bg-indigo-700 transition" data-id="${producto.id}">
+            <i class="fas fa-cart-plus mr-1"></i>Agregar
+          </button>
+        </div>
       </div>
     </div>
   `;
   
   return card;
+}
+
+/**
+ * Genera estrellas de rating
+ */
+function generarEstrellasRating(rating) {
+  const fullStars = Math.floor(rating);
+  const hasHalfStar = rating % 1 >= 0.5;
+  const emptyStars = 5 - fullStars - (hasHalfStar ? 1 : 0);
+  
+  let html = '';
+  
+  // Estrellas completas
+  for (let i = 0; i < fullStars; i++) {
+    html += '<i class="fas fa-star text-yellow-400"></i>';
+  }
+  
+  // Media estrella
+  if (hasHalfStar) {
+    html += '<i class="fas fa-star-half-alt text-yellow-400"></i>';
+  }
+  
+  // Estrellas vacías
+  for (let i = 0; i < emptyStars; i++) {
+    html += '<i class="far fa-star text-gray-400"></i>';
+  }
+  
+  return html;
+}
+
+// Funciones para integración con otros sistemas
+function toggleFavorito(productId) {
+  if (typeof window.toggleFavorito === 'function') {
+    window.toggleFavorito(productId);
+  } else {
+    console.log('Sistema de favoritos no disponible');
+  }
+}
+
+function toggleComparacion(productId) {
+  if (typeof window.toggleComparacion === 'function') {
+    window.toggleComparacion(productId);
+  } else {
+    console.log('Sistema de comparación no disponible');
+  }
+}
+
+function verProducto(productId) {
+  if (typeof window.mostrarModalReviews === 'function') {
+    window.mostrarModalReviews(productId);
+  } else {
+    console.log('Sistema de reseñas no disponible');
+  }
 }
 
 /**
